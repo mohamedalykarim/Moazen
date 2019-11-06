@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "65058680685",
+    "firebase_url": "https://moazen-fa64a.firebaseio.com",
+    "project_id": "moazen-fa64a",
+    "storage_bucket": "moazen-fa64a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65058680685:android:8fc4ea3bcef5b4b355f464",
+        "android_client_info": {
+          "package_name": "mohalim.islamic.moazen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65058680685-re3kffgqdrf2er4vtrp5p48rdqq9dfdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHi6eWq2KHqUy-vqSxR4DgmvLwQltH0bU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65058680685-re3kffgqdrf2er4vtrp5p48rdqq9dfdn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
