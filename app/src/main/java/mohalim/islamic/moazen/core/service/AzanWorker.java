@@ -16,13 +16,19 @@ import androidx.work.WorkerParameters;
 import java.util.concurrent.CountDownLatch;
 
 import mohalim.islamic.moazen.R;
+import mohalim.islamic.moazen.core.utils.Constants;
+import mohalim.islamic.moazen.core.utils.Utils;
 
 public class AzanWorker extends Worker {
     private static final String CHANNEL_ID = "Azan";
     MediaPlayer mediaPlayer;
 
+    String  azanType;
+
     public AzanWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+
+        azanType = workerParams.getInputData().getString(Constants.AZAN_TYPE);
     }
 
     @NonNull
@@ -52,10 +58,12 @@ public class AzanWorker extends Worker {
     }
 
     private void notification() {
+
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Moazen")
-                .setContentText("Zohr Azan Now")
+                .setContentText(Utils.getAzantTypeResource(azanType)+ " Azan Now")
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());

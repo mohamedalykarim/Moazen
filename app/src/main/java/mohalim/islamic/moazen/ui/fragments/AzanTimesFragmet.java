@@ -10,15 +10,26 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import mohalim.islamic.moazen.core.database.AzanTimesDao;
 import mohalim.islamic.moazen.core.database.AzanTimesDatabase;
 import mohalim.islamic.moazen.core.model.AzanTimesItem;
 import mohalim.islamic.moazen.core.utils.AppExecutor;
+import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.databinding.AzanTimesFragmentBinding;
 
-public class AzanTimesFragmet extends Fragment {
+public class AzanTimesFragmet extends DaggerFragment {
+    @Inject
+    PrayTime prayers;
+
+
+
     int position;
 
     @Nullable
@@ -26,31 +37,35 @@ public class AzanTimesFragmet extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         AzanTimesFragmentBinding binding = AzanTimesFragmentBinding.inflate(inflater, container, false);
 
-        Calendar calendar = Calendar.getInstance();
+        double latitude = 25.8441239;
+        double longitude = 32.834721;
+        double timezone = 2;
 
-        int day = position+1;
-        int monthNumber = calendar.get(Calendar.MONTH)+1;
-        int year = calendar.get(Calendar.YEAR);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
-        String month = simpleDateFormat.format(calendar.getTime());
+        // Test Prayer times here
 
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_YEAR, position+1);
 
-        binding.dateTv.setText(day+"/"+monthNumber+"/"+year);
+        binding.dateTv.setText(
+                cal.get(Calendar.DAY_OF_MONTH)
+                +"-"+
+                (cal.get(Calendar.MONTH)+1)
+                +"-"+
+                cal.get(Calendar.YEAR)
 
+        );
 
-        AppExecutor.getInstance().diskIO().execute(()->{
-            AzanTimesDatabase database = AzanTimesDatabase.getDatabase(getContext());
-            AzanTimesDao azanTimesDao = database.azanTimesDao();
+        ArrayList<String> prayerTimes = prayers.getPrayerTimes(cal,
+                latitude, longitude, timezone);
 
-            AzanTimesItem azanTimesItem = azanTimesDao.getAzanTimesForday("Luxor", month+"", day+"");
-            binding.fagrTimeTv.setText(azanTimesItem.getFagr());
-            binding.shoroqTimeTv.setText(azanTimesItem.getShoroq());
-            binding.zohrTimeTv.setText(azanTimesItem.getZohr());
-            binding.asrTimeTv.setText(azanTimesItem.getAsr());
-            binding.maghrebTimeTv.setText(azanTimesItem.getMaghreb());
-            binding.eshaaTimeTv.setText(azanTimesItem.getEshaa());
+        binding.fagrTimeTv.setText(prayerTimes.get(0));
+        binding.shoroqTimeTv.setText(prayerTimes.get(1));
+        binding.zohrTimeTv.setText(prayerTimes.get(2));
+        binding.asrTimeTv.setText(prayerTimes.get(3));
+        binding.maghrebTimeTv.setText(prayerTimes.get(4));
+        binding.eshaaTimeTv.setText(prayerTimes.get(6));
 
-        });
 
 
         return binding.getRoot();

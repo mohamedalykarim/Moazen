@@ -9,6 +9,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
 import mohalim.islamic.moazen.core.di.base.BaseApplication;
 import mohalim.islamic.moazen.core.di.module.ActivityBuilderModule;
 import mohalim.islamic.moazen.core.di.module.AppModule;
+import mohalim.islamic.moazen.core.di.module.FragmentBuilderModule;
 import mohalim.islamic.moazen.core.di.module.ViewModelFactoryModule;
 import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 
@@ -16,6 +17,7 @@ import mohalim.islamic.moazen.core.service.AzanTimesWorker;
         modules = {
                 AndroidSupportInjectionModule.class,
                 ActivityBuilderModule.class,
+                FragmentBuilderModule.class,
                 ViewModelFactoryModule.class,
                 AppModule.class
         })

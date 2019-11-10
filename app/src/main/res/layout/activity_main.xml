@@ -70,30 +70,73 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/counterTV">
 
-            <Button
-                android:id="@+id/prayerTimesBtn"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Prayer times"
-                android:textColor="@color/colorAccent" />
+                android:layout_weight="1">
 
-            <Button
-                android:id="@+id/settingBtn"
+                <Button
+                    android:id="@+id/prayerTimesBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:paddingStart="45dp"
+                    android:text="Prayer times"
+                    android:textColor="@color/colorAccent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView18"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:elevation="100dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/prayerTimesBtn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/prayerTimesBtn"
+                    app:srcCompat="@drawable/clock" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Setting"
-                android:textColor="@color/colorAccent" />
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/settingBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:paddingStart="45dp"
+                    android:text="Setting"
+                    android:textColor="@color/colorAccent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView19"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:elevation="100dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/settingBtn"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/setting" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
 
         <ProgressBar

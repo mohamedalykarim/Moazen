@@ -37,13 +37,13 @@ public class PrayerTimesBottom extends BottomSheetDialogFragment {
         );
 
 
-        int days = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
+        int days = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_YEAR);
         pagerAdapter.setNumberOfDays(days);
 
 
         binding.azanTimesViewPager.setAdapter(pagerAdapter);
 
-        binding.azanTimesViewPager.setCurrentItem(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)-1);
+        binding.azanTimesViewPager.setCurrentItem(Calendar.getInstance().get(Calendar.DAY_OF_YEAR)-1);
 
         return binding.getRoot();
     }

@@ -26,6 +26,7 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,7 +87,7 @@
             <TableRow
                 android:id="@+id/fagr"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:paddingStart="5dp"
@@ -103,15 +104,25 @@
                     android:layout_weight="1"
                     android:background="#fff">
 
+                    <ImageView
+                        android:id="@+id/imageView12"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="32dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/masjed" />
+
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:text="Al Fagr"
                         android:textColor="#313131"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView12"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -121,6 +132,16 @@
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
                     android:background="#fff">
+
+                    <ImageView
+                        android:id="@+id/imageView6"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/fagrTimeTv"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/clock" />
 
                     <TextView
                         android:id="@+id/fagrTimeTv"
@@ -138,7 +159,7 @@
             <TableRow
                 android:id="@+id/zohr"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:paddingStart="5dp"
@@ -155,15 +176,25 @@
                     android:layout_weight="1"
                     android:background="#fff">
 
+                    <ImageView
+                        android:id="@+id/imageView13"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="32dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/masjed" />
+
                     <TextView
                         android:id="@+id/textView5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:text="Al Zohr"
                         android:textColor="#313131"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView13"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -173,6 +204,16 @@
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
                     android:background="#fff">
+
+                    <ImageView
+                        android:id="@+id/imageView7"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/zohrTimeTv"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/clock" />
 
                     <TextView
                         android:id="@+id/zohrTimeTv"
@@ -190,7 +231,7 @@
             <TableRow
                 android:id="@+id/asr"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:paddingStart="5dp"
@@ -207,15 +248,25 @@
                     android:layout_weight="1"
                     android:background="#fff">
 
+                    <ImageView
+                        android:id="@+id/imageView14"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="32dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/masjed" />
+
                     <TextView
                         android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:text="Al Asr"
                         android:textColor="#313131"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView14"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -225,6 +276,16 @@
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
                     android:background="#fff">
+
+                    <ImageView
+                        android:id="@+id/imageView8"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/asrTimeTv"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/clock" />
 
                     <TextView
                         android:id="@+id/asrTimeTv"
@@ -242,7 +303,7 @@
             <TableRow
                 android:id="@+id/eshaa"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:paddingStart="5dp"
@@ -259,15 +320,25 @@
                     android:layout_weight="1"
                     android:background="#fff">
 
+                    <ImageView
+                        android:id="@+id/imageView15"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="32dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/masjed" />
+
                     <TextView
                         android:id="@+id/textView8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:text="Al Eshaa"
                         android:textColor="#313131"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView15"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -277,6 +348,16 @@
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
                     android:background="#fff">
+
+                    <ImageView
+                        android:id="@+id/imageView9"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/eshaaTimeTv"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/clock" />
 
                     <TextView
                         android:id="@+id/eshaaTimeTv"
@@ -294,7 +375,7 @@
             <TableRow
                 android:id="@+id/shoroq"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:paddingStart="5dp"
@@ -311,15 +392,25 @@
                     android:layout_weight="1"
                     android:background="#fff">
 
+                    <ImageView
+                        android:id="@+id/imageView16"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="32dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/masjed" />
+
                     <TextView
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:text="Al Shoroq"
                         android:textColor="#313131"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView16"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -340,13 +431,23 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/shoroqTimeTv"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/clock" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </TableRow>
 
             <TableRow
                 android:id="@+id/maghreb"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:paddingStart="5dp"
@@ -363,15 +464,25 @@
                     android:layout_weight="1"
                     android:background="#fff">
 
+                    <ImageView
+                        android:id="@+id/imageView17"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="32dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/masjed" />
+
                     <TextView
                         android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:text="Al Maghreb"
                         android:textColor="#313131"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView17"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -381,6 +492,16 @@
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
                     android:background="#fff">
+
+                    <ImageView
+                        android:id="@+id/imageView11"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/maghrebTimeTv"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/clock" />
 
                     <TextView
                         android:id="@+id/maghrebTimeTv"
