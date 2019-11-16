@@ -1,5 +1,14 @@
 package mohalim.islamic.moazen.core.utils;
 
+import androidx.work.ListenableWorker;
+
+import java.util.Map;
+import java.util.Objects;
+
+import javax.inject.Provider;
+
+import mohalim.islamic.moazen.core.service.ChildWorkerFactory;
+
 public class Utils {
 
     public static String getAzantTypeResource(String azanType){
@@ -16,5 +25,14 @@ public class Utils {
         }else if (azanType.equals(Constants.AZAN_ESHAA)){
             return "Al Eshaa";
         }else return null;
+    }
+
+    public static Provider<ChildWorkerFactory> getWorkerFactoryProviderByKey(Map<Class<? extends ListenableWorker>, Provider<ChildWorkerFactory>> map, String key) {
+        for (Map.Entry<Class<? extends ListenableWorker>, Provider<ChildWorkerFactory>> entry : map.entrySet()) {
+            if (Objects.equals(key, entry.getKey().getName())) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 }

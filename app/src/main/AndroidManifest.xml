@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="mohalim.islamic.moazen">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <application
         android:name=".core.di.base.BaseApplication"
         android:allowBackup="true"
@@ -11,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.setting.SettingActivity"></activity>
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,7 +22,11 @@
             </intent-filter>
         </activity>
 
-
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="mohalim.islamic.moazen.workmanager-init"
+            android:exported="false"
+            tools:node="remove" />
     </application>
 
 </manifest>

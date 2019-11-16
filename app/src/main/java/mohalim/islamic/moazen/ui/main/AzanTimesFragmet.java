@@ -1,4 +1,4 @@
-package mohalim.islamic.moazen.ui.fragments;
+package mohalim.islamic.moazen.ui.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +21,7 @@ import mohalim.islamic.moazen.core.database.AzanTimesDao;
 import mohalim.islamic.moazen.core.database.AzanTimesDatabase;
 import mohalim.islamic.moazen.core.model.AzanTimesItem;
 import mohalim.islamic.moazen.core.utils.AppExecutor;
+import mohalim.islamic.moazen.core.utils.AppSettingHelper;
 import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.databinding.AzanTimesFragmentBinding;
 
@@ -37,9 +38,9 @@ public class AzanTimesFragmet extends DaggerFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         AzanTimesFragmentBinding binding = AzanTimesFragmentBinding.inflate(inflater, container, false);
 
-        double latitude = 25.8441239;
-        double longitude = 32.834721;
-        double timezone = 2;
+        double latitude = Double.parseDouble(AppSettingHelper.getLatitude(getActivity()));
+        double longitude = Double.parseDouble(AppSettingHelper.getLongitude(getActivity()));;
+        double timezone = Double.parseDouble(AppSettingHelper.getTimeZone(getActivity()));;
 
         // Test Prayer times here
 

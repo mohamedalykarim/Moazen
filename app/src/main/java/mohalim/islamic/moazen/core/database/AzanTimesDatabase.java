@@ -1,7 +1,6 @@
 package mohalim.islamic.moazen.core.database;
 
 import android.content.Context;
-import android.content.Entity;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -9,7 +8,12 @@ import androidx.room.RoomDatabase;
 
 import mohalim.islamic.moazen.core.model.AzanTimesItem;
 
-@Database(entities = {AzanTimesItem.class}, version = 1, exportSchema = false)
+@Database(
+        entities = {
+                AzanTimesItem.class,
+        },
+        version = 1,
+        exportSchema = false)
 public abstract class AzanTimesDatabase extends RoomDatabase {
     public abstract AzanTimesDao azanTimesDao();
 

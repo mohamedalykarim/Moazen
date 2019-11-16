@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Moazen</string>
+    <string name="islamic_society_of_north_america_isna">Islamic Society of North America (ISNA)</string>
+    <string name="institute_of_geophysics_university_of_tehran">Institute of Geophysics, University of Tehran</string>
+    <string name="egyptian_general_authority_of_survey">Egyptian General Authority of Survey</string>
+    <string name="muslim_world_league_mwl">Muslim World League (MWL)</string>
+    <string name="umm_al_qura_makkah">Umm al-Qura, Makkah</string>
+    <string name="university_of_islamic_sciences_karachi">University of Islamic Sciences, Karachi</string>
 </resources>

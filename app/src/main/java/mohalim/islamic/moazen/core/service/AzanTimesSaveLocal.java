@@ -34,7 +34,7 @@ public class AzanTimesSaveLocal extends Worker {
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
         FirebaseDatabase.getInstance().getReference()
-                .child("City")
+                .child("CityLocation")
                 .child("Luxor")
                 .child("AzanTimes")
                     .addListenerForSingleValueEvent(new ValueEventListener() {

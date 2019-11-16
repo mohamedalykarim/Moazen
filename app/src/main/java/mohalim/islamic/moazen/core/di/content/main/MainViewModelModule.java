@@ -11,7 +11,6 @@ import mohalim.islamic.moazen.ui.main.MainViewModel;
 @Module
 public abstract class MainViewModelModule {
 
-
     @Binds
     @IntoMap
     @ViewModelKey(MainViewModel.class)

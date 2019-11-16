@@ -1,11 +1,13 @@
 package mohalim.islamic.moazen.core.service;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
+import androidx.work.ListenableWorker;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
@@ -14,10 +16,12 @@ import androidx.work.WorkerParameters;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+
 import mohalim.islamic.moazen.core.utils.AppDateUtil;
 import mohalim.islamic.moazen.core.utils.Constants;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class AzanTimesWorker extends Worker {
 
@@ -36,7 +40,9 @@ public class AzanTimesWorker extends Worker {
     public Result doWork() {
 
         Calendar calendar = Calendar.getInstance();
-//        addAllAzanDay("06-11-2019, 22:15");
+
+        addAllAzanDay("11-11-2019, 23:10", Constants.AZAN_FUGR);
+
 
         String currentAzan = "";
 
@@ -97,6 +103,23 @@ public class AzanTimesWorker extends Worker {
                 );
 
     }
+
+
+    public static class Factory implements ChildWorkerFactory {
+
+        private final Provider<MediaPlayer> modelProvider;
+
+        @Inject
+        public Factory(@Named("AzanMediaPlayer") Provider<MediaPlayer> modelProvider) {
+            this.modelProvider = modelProvider;
+        }
+
+        @Override
+        public ListenableWorker create(Context context, WorkerParameters workerParameters) {
+            return new AzanTimesWorker(context, workerParameters);
+        }
+    }
+
 
 
 }

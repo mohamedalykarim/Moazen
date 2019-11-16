@@ -4,29 +4,30 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import mohalim.islamic.moazen.R;
-import mohalim.islamic.moazen.core.database.AzanTimesDao;
 import mohalim.islamic.moazen.core.di.base.BaseActivity;
 import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppDateUtil;
+import mohalim.islamic.moazen.core.utils.AppSettingHelper;
 import mohalim.islamic.moazen.core.viewmodel.ViewModelProviderFactory;
 import mohalim.islamic.moazen.databinding.ActivityMainBinding;
 import mohalim.islamic.moazen.ui.bottoms.PrayerTimesBottom;
+import mohalim.islamic.moazen.ui.setting.SettingActivity;
 
 public class MainActivity extends BaseActivity {
     private static final String TAG = "mohalim";
@@ -62,7 +63,6 @@ public class MainActivity extends BaseActivity {
     @Inject
     Calendar calendar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +78,14 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        binding.settingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+            }
+        });
 
 
-        manager = WorkManager.getInstance(this);
 
         Data data = new Data.Builder().putStringArray("prayerTimes",prayTimes).build();
         PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
@@ -88,6 +93,8 @@ public class MainActivity extends BaseActivity {
                 2,
                 TimeUnit.HOURS
         ).setInputData(data).build();
+
+        manager = WorkManager.getInstance(this);
 
 
         manager.enqueueUniquePeriodicWork(
@@ -98,38 +105,15 @@ public class MainActivity extends BaseActivity {
 
 
 
-//
-//        Calendar calendar = calendar;
-//        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-//        final int monthNumber = calendar.get(Calendar.MONTH)+1;
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
-//        String month = simpleDateFormat.format(calendar.getTime());
-//
-//
-//        final AzanTimesDatabase database = AzanTimesDatabase.getDatabase(getApplicationContext());
-//        final AzanTimesDao azanTimesDao = database.azanTimesDao();
-//
-//
-//        AppExecutor.getInstance().diskIO().execute(()->{
-//           long count = azanTimesDao.getCount("Luxor");
-//
-//            if (count < 365){
-//
-//                OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(AzanTimesSaveLocal.class).build();
-//                WorkManager.getInstance(this).enqueue(oneTimeWorkRequest);
-//
-//                observeInsertionTask(oneTimeWorkRequest, month, day, monthNumber,azanTimesDao);
-//
-//
-//            }else {
-//                AppExecutor.getInstance().diskIO().execute(()->{
-//                    azanTimes(month, day+"", monthNumber, azanTimesDao);
-//                });
-//
-//            }
-//
-//
-//        });
+
+
+        firstTimeAppOpened();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         azanTimes(
                 calendar.get(Calendar.DAY_OF_MONTH)+"",
@@ -137,28 +121,7 @@ public class MainActivity extends BaseActivity {
         );
     }
 
-//    private void observeInsertionTask(OneTimeWorkRequest oneTimeWorkRequest, String month, int day, int monthNumber, AzanTimesDao azanTimesDao) {
-//        AppExecutor.getInstance().mainThread().execute(()->{
-
-//            WorkManager.getInstance(this)
-//                    .getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
-//                    .observe((LifecycleOwner) this, result->{
-//                        if (result == null)return;
-//                        if (result.getState() != WorkInfo.State.SUCCEEDED) return;
-//
-//                        AppExecutor.getInstance().diskIO().execute(()->{
-//                            azanTimes(month, day+"", monthNumber, azanTimesDao);
-//                        });
-//                    });
-//        });
-//
-//    }
-
-
     void azanTimes(String day, int monthNumber){
-
-
-//            AzanTimesItem azanTimesItem =  azanTimesDao.getAzanTimesForday("Luxor", month, day+"");
 
 
             fagr = day + "-" + monthNumber
@@ -313,6 +276,15 @@ public class MainActivity extends BaseActivity {
             });
 
 
+
+
+    }
+
+
+    void firstTimeAppOpened(){
+        if (!AppSettingHelper.getIsFirstTimeAppOpened(this)) return;
+
+        AppSettingHelper.setIsFirstTimeAppOpened(this, false);
 
     }
 
