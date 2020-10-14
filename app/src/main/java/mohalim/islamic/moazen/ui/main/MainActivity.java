@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity {
 
             eshaa = day + "-" + monthNumber
                     + "-" + calendar.get(Calendar.YEAR)
-                    + ", " + prayTimes[5];
+                    + ", " + prayTimes[6];
 
 
 

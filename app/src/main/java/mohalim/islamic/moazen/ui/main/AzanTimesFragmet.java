@@ -44,7 +44,6 @@ public class AzanTimesFragmet extends DaggerFragment {
 
         // Test Prayer times here
 
-        Date now = new Date();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_YEAR, position+1);
 

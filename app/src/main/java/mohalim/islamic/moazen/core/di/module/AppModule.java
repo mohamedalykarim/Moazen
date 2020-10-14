@@ -34,7 +34,7 @@ public class AppModule {
 
         prayers.setTimeFormat(prayers.Time24);
         prayers.setCalcMethod(AppSettingHelper.getAzanCalculationMethod(application, prayers.Egypt));
-        prayers.setAsrJuristic(prayers.Shafii);
+        prayers.setAsrJuristic(AppSettingHelper.getAzanJuristicMethod(application,prayers.Shafii));
         prayers.setAdjustHighLats(prayers.AngleBased);
         int[] offsets = {0, 0, 0, 0, 0, 0, 0}; // {Fajr,Sunrise,Dhuhr,Asr,Sunset,Maghrib,Isha}
         prayers.tune(offsets);

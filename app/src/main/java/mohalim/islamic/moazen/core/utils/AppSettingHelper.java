@@ -100,7 +100,7 @@ public class AppSettingHelper {
 
 
     /**
-     * TIME_ZONE
+     * AZAN_CALCULATION_METHOD
      */
 
     private static final String AZAN_CALCULATION_METHOD =  "azan_calculation_method";
@@ -112,6 +112,23 @@ public class AppSettingHelper {
     public static void setAzanCalculationMethod(Context context, int newValue) {
         final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putInt(AZAN_CALCULATION_METHOD , newValue);
+        editor.commit();
+    }
+
+    /**
+     * AZAN_JURISTIC_METHOD
+     */
+
+    private static final String AZAN_JURISTIC_METHOD =  "azan_juristic_method";
+
+    public static int getAzanJuristicMethod(Context context, int defaultValue) {
+        return getSharedPreferences(context).getInt(AZAN_JURISTIC_METHOD, defaultValue);
+    }
+
+
+    public static void setAzanJuristicMethod(Context context, int newValue) {
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putInt(AZAN_JURISTIC_METHOD , newValue);
         editor.commit();
     }
 

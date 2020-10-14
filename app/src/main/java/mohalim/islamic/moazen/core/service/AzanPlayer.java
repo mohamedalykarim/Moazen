@@ -1,5 +1,6 @@
 package mohalim.islamic.moazen.core.service;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -9,6 +10,8 @@ import android.os.IBinder;
 import android.util.Log;
 
 import java.io.IOException;
+
+import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import mohalim.islamic.moazen.R;
@@ -22,12 +25,16 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
 
     // Binder given to clients
     private final IBinder iBinder = new LocalBinder();
-    private MediaPlayer mediaPlayer;
+
+    @Inject
+    MediaPlayer mediaPlayer;
+
     private int resumePosition;
     private AudioManager audioManager;
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        initMediaPlayer();
+        return Service.START_STICKY;
     }
 
 
@@ -141,8 +148,7 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     }
 
     private void initMediaPlayer() {
-        mediaPlayer = MediaPlayer.create(getApplication(), R.raw.quds);
-        mediaPlayer.prepareAsync();
+        playMedia();
     }
 
     private void playMedia() {

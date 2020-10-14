@@ -38,7 +38,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="2000dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
@@ -55,6 +55,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
@@ -66,14 +67,26 @@
                         android:id="@+id/imageView21"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scaleType="fitEnd"
+                        android:scaleType="center"
                         android:src="@drawable/setting_header" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/setting_content_grediant"
-                        android:paddingBottom="10dp">
+                        android:background="@drawable/setting_content_grediant">
+
+                        <ImageView
+                            android:id="@+id/imageView25"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:scaleType="centerCrop"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:srcCompat="@drawable/transparent_bg" />
 
                         <TextView
                             android:id="@+id/textView9"
@@ -91,6 +104,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
+                            android:layout_marginBottom="10dp"
                             android:textAlignment="center"
                             android:textColor="@color/colorAccent"
                             android:textSize="12sp"
@@ -136,16 +150,28 @@
 
                     <ImageView
                         android:id="@+id/imageView20"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scaleType="fitEnd"
+                        android:scaleType="center"
                         android:src="@drawable/setting_header" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/setting_content_grediant"
-                        android:paddingBottom="10dp">
+                        android:background="@drawable/setting_content_grediant">
+
+                        <ImageView
+                            android:id="@+id/imageView26"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:scaleType="centerCrop"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:srcCompat="@drawable/transparent_bg" />
 
                         <TextView
                             android:id="@+id/calculationTypeTv"
@@ -164,12 +190,12 @@
                             android:id="@+id/calculationTypeTitleTv2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
                             android:text="Your selected Azan Times Calculation Type is :"
                             android:textAlignment="center"
                             android:textColor="@color/colorAccent"
                             android:textSize="14sp"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.503"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -259,16 +285,124 @@
 
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/calTypeBtnsContainer" />
+
                         <Button
                             android:id="@+id/calTypeEditBtn"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="30dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
                             android:background="@drawable/setting_grediant"
                             android:text="Edit"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/calculationTypeTv" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView24"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scaleType="center"
+                        android:src="@drawable/setting_header" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/setting_content_grediant">
+
+                        <ImageView
+                            android:id="@+id/imageView27"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:scaleType="centerCrop"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:srcCompat="@drawable/transparent_bg" />
+
+                        <TextView
+                            android:id="@+id/juristicMethodTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/juristicMethodTitleTv" />
+
+                        <TextView
+                            android:id="@+id/juristicMethodTitleTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Your selected Azan Juristic Method is :"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <View
+                            android:id="@+id/view"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/juristicMethodBtnsContainer" />
+
+                        <LinearLayout
+                            android:id="@+id/juristicMethodBtnsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/juristicMethodTv">
+
+
+                            <Button
+                                android:id="@+id/juristicMethod1Btn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/setting_grediant"
+                                android:text="Shafii"
+                                android:textColor="#000"
+                                android:textSize="10sp" />
+
+                            <Button
+                                android:id="@+id/juristicMethod2Btn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/setting_grediant"
+                                android:text="Hanafi"
+                                android:textColor="#000"
+                                android:textSize="10sp" />
+
+
+                        </LinearLayout>
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -299,7 +433,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

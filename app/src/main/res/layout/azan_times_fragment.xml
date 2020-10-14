@@ -102,7 +102,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView12"
@@ -131,7 +131,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView6"
@@ -174,7 +174,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView13"
@@ -203,7 +203,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView7"
@@ -246,7 +246,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView14"
@@ -275,7 +275,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView8"
@@ -318,7 +318,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView15"
@@ -347,7 +347,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView9"
@@ -390,7 +390,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView16"
@@ -419,7 +419,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <TextView
                         android:id="@+id/shoroqTimeTv"
@@ -462,7 +462,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView17"
@@ -491,7 +491,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="2dp"
                     android:layout_weight="1"
-                    android:background="#fff">
+                    android:background="@drawable/setting_content_grediant">
 
                     <ImageView
                         android:id="@+id/imageView11"

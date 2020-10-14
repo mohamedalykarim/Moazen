@@ -6,4 +6,6 @@
     <string name="muslim_world_league_mwl">Muslim World League (MWL)</string>
     <string name="umm_al_qura_makkah">Umm al-Qura, Makkah</string>
     <string name="university_of_islamic_sciences_karachi">University of Islamic Sciences, Karachi</string>
+    <string name="shafii">Shafii</string>
+    <string name="hanafi">Hanafi</string>
 </resources>

@@ -3,7 +3,6 @@ package mohalim.islamic.moazen.core.model;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 
-import com.google.firebase.database.annotations.NotNull;
 
 @Entity(primaryKeys = {"month", "day", "city"}, tableName = "azan_times")
 public class AzanTimesItem {

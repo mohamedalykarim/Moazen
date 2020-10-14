@@ -42,6 +42,12 @@ public class AzanTimesWorker extends Worker {
         cancelAzan(alarmManager, Constants.AZAN_ESHAA);
 
 
+//        setAzan(alarmManager,"20:05", Constants.AZAN_FUGR);
+//        setAzan(alarmManager,"20:10", Constants.AZAN_ZUHR);
+//        setAzan(alarmManager, "20:15", Constants.AZAN_ASR);
+//        setAzan(alarmManager, "20:20", Constants.AZAN_MAGHREB);
+//        setAzan(alarmManager, "20:25", Constants.AZAN_ESHAA);
+
         setAzan(alarmManager,prayerTimes[0], Constants.AZAN_FUGR);
         setAzan(alarmManager,prayerTimes[2], Constants.AZAN_ZUHR);
         setAzan(alarmManager, prayerTimes[3], Constants.AZAN_ASR);
@@ -83,9 +89,6 @@ public class AzanTimesWorker extends Worker {
             } else {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
-
-
-
         }
     }
 
