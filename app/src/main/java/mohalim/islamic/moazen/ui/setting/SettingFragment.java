@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,57 @@ public class SettingFragment extends DaggerFragment {
 
     private LocationManager mLocationManager;
     private Location location;
+    private boolean goToStartGPS = false;
+
+    LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            List<Address> addresses = getAddresses(location.getLatitude(), location.getLongitude());
+            if (addresses == null){
+                Log.d(TAG, "onLocationChanged: addresses null");
+                return;
+            };
+
+            if (addresses.size() == 0 ){
+                Log.d(TAG, "onLocationChanged: addresses size is 0");
+                return;
+            };
+
+            Log.d(TAG, "onLocationChanged: test");
+
+            TimeZone tz = TimeZone.getDefault();
+
+
+            binding.cityTv.setText(addresses.get(0).getAddressLine(0));
+            binding.latAndLongAndTimezone.setText(
+                    "Latitude : " + location.getLatitude() + "\n"
+                            + "Longitude : " + location.getLongitude() + "\n"
+                            + "Timezone : " +tz.getRawOffset()/1000/60/60
+            );
+            AppSettingHelper.setLocationName(getActivity(), addresses.get(0).getAddressLine(0));
+            AppSettingHelper.setLatitude(getActivity(),String.valueOf(location.getLatitude()));
+            AppSettingHelper.setLongitude(getActivity(),String.valueOf(location.getLongitude()));
+            AppSettingHelper.setTimeZone(getActivity(),String.valueOf(tz.getRawOffset()/1000/60/60));
+
+            binding.loading.setVisibility(View.GONE);
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
 
     public static SettingFragment newInstance() {
@@ -196,50 +248,17 @@ public class SettingFragment extends DaggerFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (goToStartGPS){
+            locationInit();
+            goToStartGPS = false;
+        }
+    }
+
     public void locationInit() {
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                List<Address> addresses = getAddresses(location.getLatitude(), location.getLongitude());
-                if (addresses == null)return;
-                if (addresses.size() == 0 )return;
-
-//                IConverter iconv = Converter.getInstance(TimeZoneListStore.class);
-//                TimeZone tz = iconv.getTimeZone(location.getLatitude(), location.getLongitude());
-//
-                TimeZone tz = TimeZone.getDefault();
-
-
-                binding.cityTv.setText(addresses.get(0).getAddressLine(0));
-                binding.latAndLongAndTimezone.setText(
-                        "Latitude : " + location.getLatitude() + "\n"
-                        + "Longitude : " + location.getLongitude() + "\n"
-                        + "Timezone : " +tz.getRawOffset()/1000/60/60
-                );
-                AppSettingHelper.setLocationName(getActivity(), addresses.get(0).getAddressLine(0));
-                AppSettingHelper.setLatitude(getActivity(),String.valueOf(location.getLatitude()));
-                AppSettingHelper.setLongitude(getActivity(),String.valueOf(location.getLongitude()));
-                AppSettingHelper.setTimeZone(getActivity(),String.valueOf(tz.getRawOffset()/1000/60/60));
-
-                binding.loading.setVisibility(View.GONE);
-
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
 
         mLocationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
@@ -248,9 +267,7 @@ public class SettingFragment extends DaggerFragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
         }else {
 
-
-
-            if(!isGPSEnabled() && !isNetworkEnabled()) {
+            if(!isGPSEnabled()) {
                 // notify user
                 new AlertDialog.Builder(getActivity())
                         .setMessage("Sorry GPS is not enabled")
@@ -262,6 +279,8 @@ public class SettingFragment extends DaggerFragment {
                         })
                         .setNegativeButton("Cancel",null)
                         .show();
+
+                goToStartGPS = true;
             }
 
 
@@ -304,26 +323,19 @@ public class SettingFragment extends DaggerFragment {
         }
     }
 
-    private String getTimeZone(String countryName){
-        return "" + ((TimeZone.getTimeZone(countryName).getRawOffset())/1000/60/60);
-    }
-
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 123: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    locationInit();
+        if (requestCode == 123) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationInit();
 
-                } else {
-                    Toast.makeText(getActivity(), "You have to grant location permission to determine your location", Toast.LENGTH_SHORT).show();
-                }
-                break;
+            } else {
+                Toast.makeText(getActivity(), "You have to grant location permission to determine your location", Toast.LENGTH_SHORT).show();
             }
         }
     }

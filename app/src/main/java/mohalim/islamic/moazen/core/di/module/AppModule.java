@@ -74,18 +74,11 @@ public class AppModule {
     }
 
     @Provides
-    @Named("AzanMediaPlayer")
     @Singleton
     static MediaPlayer provideAzanMediaPlayer(Application application){
         return MediaPlayer.create(application, R.raw.quds);
     }
 
-    @Provides
-    @Named("ReminderMediaPlayer")
-    @Singleton
-    static MediaPlayer provideReminderMediaPlayer(Application application){
-        return MediaPlayer.create(application, R.raw.reminder);
-    }
 
 
 

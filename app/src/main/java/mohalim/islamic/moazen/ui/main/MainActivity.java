@@ -4,13 +4,16 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 
 
@@ -21,6 +24,7 @@ import javax.inject.Inject;
 
 import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.di.base.BaseActivity;
+import mohalim.islamic.moazen.core.service.AzanService;
 import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppDateUtil;
 import mohalim.islamic.moazen.core.utils.AppSettingHelper;
@@ -78,6 +82,8 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+
+
         binding.settingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,27 +91,23 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-
-
         Data data = new Data.Builder().putStringArray("prayerTimes",prayTimes).build();
         PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
                 AzanTimesWorker.class,
-                2,
-                TimeUnit.HOURS
+                90,
+                TimeUnit.MINUTES
         ).setInputData(data).build();
+
+
 
         manager = WorkManager.getInstance(this);
 
 
         manager.enqueueUniquePeriodicWork(
-                "AzanTimesItem",
+                "AzanTimes",
                 ExistingPeriodicWorkPolicy.REPLACE,
                 periodicWorkRequest
         );
-
-
-
-
 
         firstTimeAppOpened();
 
@@ -285,7 +287,6 @@ public class MainActivity extends BaseActivity {
         if (!AppSettingHelper.getIsFirstTimeAppOpened(this)) return;
 
         AppSettingHelper.setIsFirstTimeAppOpened(this, false);
-
     }
 
 
