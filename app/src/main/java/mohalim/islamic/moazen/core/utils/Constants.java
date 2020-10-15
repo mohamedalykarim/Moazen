@@ -11,4 +11,6 @@ public class Constants {
     public static final String AZAN_TYPE = "azan_type";
     public static final String AZAN_RECEIVER_ORDER = "azan_receiver_order";
     public static final String AZAN_RECEIVER_ORDER_INIT =  "azan_receiver_order_init";
+    public static final String AZAN_RECEIVER_ORDER_RESUME = "azan_receiver_order_resume";
+    public static final String PLAYER_POSITION = "player_position";
 }

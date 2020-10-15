@@ -11,6 +11,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -28,6 +29,7 @@ import mohalim.islamic.moazen.core.service.AzanService;
 import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppDateUtil;
 import mohalim.islamic.moazen.core.utils.AppSettingHelper;
+import mohalim.islamic.moazen.core.utils.Constants;
 import mohalim.islamic.moazen.core.viewmodel.ViewModelProviderFactory;
 import mohalim.islamic.moazen.databinding.ActivityMainBinding;
 import mohalim.islamic.moazen.ui.bottoms.PrayerTimesBottom;
@@ -66,6 +68,9 @@ public class MainActivity extends BaseActivity {
     
     @Inject
     Calendar calendar;
+
+    @Inject
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +126,19 @@ public class MainActivity extends BaseActivity {
                 calendar.get(Calendar.DAY_OF_MONTH)+"",
                 calendar.get(Calendar.MONTH)+1
         );
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Intent azanIntent = new Intent();
+        azanIntent.setAction("mohalim.islamic.moazen.START");
+        azanIntent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_RESUME);
+        Log.d(TAG, "onDestroy: "+ mediaPlayer.getCurrentPosition());
+        azanIntent.putExtra(Constants.PLAYER_POSITION, mediaPlayer.getCurrentPosition());
+        sendBroadcast(azanIntent);
+
     }
 
     void azanTimes(String day, int monthNumber){

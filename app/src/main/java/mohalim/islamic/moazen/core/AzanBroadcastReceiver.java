@@ -21,14 +21,29 @@ public class AzanBroadcastReceiver extends BroadcastReceiver {
 
         Log.d(TAG, "onReceive: AzanBroadcastReceiver");
 
-        Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
+        if (!intent.hasExtra(Constants.AZAN_RECEIVER_ORDER)) return;
+        String order = intent.getStringExtra(Constants.AZAN_RECEIVER_ORDER);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(azanPlayIntent);
-        } else {
-            context.startService(azanPlayIntent);
+
+        if (order.equals(Constants.AZAN_RECEIVER_ORDER_INIT)){
+            Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(azanPlayIntent);
+            } else {
+                context.startService(azanPlayIntent);
+            }
+        }else if (order.equals(Constants.AZAN_RECEIVER_ORDER_RESUME)){
+            Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
+            azanPlayIntent.setAction("resume");
+            azanPlayIntent.putExtra(Constants.PLAYER_POSITION, intent.getIntExtra(Constants.PLAYER_POSITION,0));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(azanPlayIntent);
+            } else {
+                context.startService(azanPlayIntent);
+            }
         }
-        context.startService(azanPlayIntent);
+
+
 
     }
 }

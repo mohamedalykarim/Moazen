@@ -1,7 +1,6 @@
 package mohalim.islamic.moazen.core.service;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -9,18 +8,17 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.io.IOException;
 
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
-import mohalim.islamic.moazen.R;
+import mohalim.islamic.moazen.core.utils.Constants;
 
 public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletionListener,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
-        MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener,
+        MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener{
 
-        AudioManager.OnAudioFocusChangeListener {
+    private final String TAG = "AzanPlayer";
 
 
     // Binder given to clients
@@ -33,14 +31,35 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     private AudioManager audioManager;
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        initMediaPlayer();
-        return Service.START_STICKY;
+        Log.d(TAG, "onStartCommand: Start Command azan player service" + mediaPlayer.getCurrentPosition());
+
+
+        if (intent.hasExtra(Constants.PLAYER_POSITION)){
+            Log.d(TAG, "onStartCommand: "+ intent.getIntExtra(Constants.PLAYER_POSITION,0));
+            mediaPlayer.seekTo(intent.getIntExtra(Constants.PLAYER_POSITION,0));
+            mediaPlayer.start();
+        }
+
+        playMedia();
+        return Service.START_NOT_STICKY;
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(TAG, "onCreate: Create azan player service");
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(TAG, "onBind: Bind Service");
         return iBinder;
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.d(TAG, "onTaskRemoved: Task remove in azan player service");
+        super.onTaskRemoved(rootIntent);
     }
 
     @Override
@@ -94,62 +113,12 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
         //Invoked indicating the completion of a seek operation.
     }
 
-    @Override
-    public void onAudioFocusChange(int focusState) {
-        //Invoked when the audio focus of the system is updated.
-        switch (focusState) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-                // resume playback
-                if (mediaPlayer == null) initMediaPlayer();
-                else if (!mediaPlayer.isPlaying()) mediaPlayer.start();
-                mediaPlayer.setVolume(1.0f, 1.0f);
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS:
-                // Lost focus for an unbounded amount of time: stop playback and release media player
-                if (mediaPlayer.isPlaying()) mediaPlayer.stop();
-                mediaPlayer.release();
-                mediaPlayer = null;
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                // Lost focus for a short time, but we have to stop
-                // playback. We don't release the media player because playback
-                // is likely to resume
-                if (mediaPlayer.isPlaying()) mediaPlayer.pause();
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                // Lost focus for a short time, but it's ok to keep playing
-                // at an attenuated level
-                if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(0.1f, 0.1f);
-                break;
-        }
-    }
-
-    private boolean requestAudioFocus() {
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            //Focus gained
-            return true;
-        }
-        //Could not gain focus
-        return false;
-    }
-
-    private boolean removeAudioFocus() {
-        return AudioManager.AUDIOFOCUS_REQUEST_GRANTED ==
-                audioManager.abandonAudioFocus(this);
-    }
-
-
     public class LocalBinder extends Binder {
         public AzanPlayer getService() {
             return AzanPlayer.this;
         }
     }
 
-    private void initMediaPlayer() {
-        playMedia();
-    }
 
     private void playMedia() {
         if (!mediaPlayer.isPlaying()) {
@@ -178,14 +147,15 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
         }
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         if (mediaPlayer != null) {
             stopMedia();
             mediaPlayer.release();
         }
-        removeAudioFocus();
     }
 
 }
