@@ -132,12 +132,14 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        Intent azanIntent = new Intent();
-        azanIntent.setAction("mohalim.islamic.moazen.START");
-        azanIntent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_RESUME);
-        Log.d(TAG, "onDestroy: "+ mediaPlayer.getCurrentPosition());
-        azanIntent.putExtra(Constants.PLAYER_POSITION, mediaPlayer.getCurrentPosition());
-        sendBroadcast(azanIntent);
+        if (mediaPlayer.getCurrentPosition() > 0){
+            Intent azanIntent = new Intent();
+            azanIntent.setAction("mohalim.islamic.moazen.START");
+            azanIntent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_RESUME);
+            Log.d(TAG, "onDestroy: "+ mediaPlayer.getCurrentPosition());
+            azanIntent.putExtra(Constants.PLAYER_POSITION, mediaPlayer.getCurrentPosition());
+            sendBroadcast(azanIntent);
+        }
 
     }
 
