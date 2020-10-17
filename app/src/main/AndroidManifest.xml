@@ -23,11 +23,6 @@
         </activity>
 
         <service
-            android:name=".core.service.AzanService"
-            android:exported="true"
-            android:enabled="true"/>
-
-        <service
             android:name=".core.service.AzanPlayer"
             android:exported="true"
             android:enabled="true"/>

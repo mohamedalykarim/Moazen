@@ -11,9 +11,9 @@
     <string name="shafii">Shafii</string>
     <string name="hanafi">Hanafi</string>
 
-    <string name="azan_fagr">Fagr</string>
-    <string name="azan_zuhr">Zuhr</string>
-    <string name="azan_asr">ASR</string>
-    <string name="azan_maghreb">Maghreb</string>
-    <string name="azan_eshaa">Eshaa`</string>
+    <string name="azan_fagr">الفجر</string>
+    <string name="azan_zuhr">الظهر</string>
+    <string name="azan_asr">العصر</string>
+    <string name="azan_maghreb">المغرب</string>
+    <string name="azan_eshaa">العشاء</string>
 </resources>

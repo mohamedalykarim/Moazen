@@ -2,16 +2,21 @@ package mohalim.islamic.moazen.core.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.util.Log;
 
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
+import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.utils.Constants;
 
 public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletionListener,
@@ -33,16 +38,48 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand: Start Command azan player service" + mediaPlayer.getCurrentPosition());
 
-
         if (intent.hasExtra(Constants.PLAYER_POSITION)){
             Log.d(TAG, "onStartCommand: "+ intent.getIntExtra(Constants.PLAYER_POSITION,0));
             mediaPlayer.seekTo(intent.getIntExtra(Constants.PLAYER_POSITION,0));
             mediaPlayer.start();
         }
 
-        playMedia();
+        Log.d(TAG, "has type: "+intent.getStringExtra(Constants.PLAYER_SERVICE_TYPE));
+
+        if (!intent.hasExtra(Constants.PLAYER_SERVICE_TYPE)) return Service.START_NOT_STICKY;
+
+        String type = intent.getStringExtra(Constants.PLAYER_SERVICE_TYPE);
+        if (type.equals(Constants.PLAYER_REMINDER)){
+            changeMedia(R.raw.reminder);
+            mediaPlayer.start();
+            Log.d(TAG, "onStartCommand: Player reminder");
+        } else if (type.equals(Constants.PLAYER_AZAN)){
+            changeMedia(R.raw.quds);
+            mediaPlayer.start();
+            Log.d(TAG, "onStartCommand: Player azan");
+        }if (type.equals(Constants.AZAN_RECEIVER_ORDER_STOP)){
+            if (mediaPlayer.isPlaying()){
+                mediaPlayer.seekTo(0);
+                mediaPlayer.stop();
+            }
+        }
+
         return Service.START_NOT_STICKY;
     }
+
+    private void changeMedia(int file) {
+        AssetFileDescriptor assetFileDescriptor = getResources().openRawResourceFd(file);
+        try {
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(), assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
+            mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.prepareAsync();
+
+        } catch (IOException e) {
+            Log.d(TAG, "onStartCommand: "+ e.getMessage());
+        }
+    }
+
 
     @Override
     public void onCreate() {

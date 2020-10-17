@@ -7,9 +7,6 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -25,7 +22,6 @@ import javax.inject.Inject;
 
 import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.di.base.BaseActivity;
-import mohalim.islamic.moazen.core.service.AzanService;
 import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppDateUtil;
 import mohalim.islamic.moazen.core.utils.AppSettingHelper;

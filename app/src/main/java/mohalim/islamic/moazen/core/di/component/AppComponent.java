@@ -11,6 +11,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
 import mohalim.islamic.moazen.core.di.base.BaseApplication;
 import mohalim.islamic.moazen.core.di.module.ActivityBuilderModule;
 import mohalim.islamic.moazen.core.di.module.AppModule;
+import mohalim.islamic.moazen.core.di.module.BroadCastReceiverBuilderModule;
 import mohalim.islamic.moazen.core.di.module.ServiceBuilderModule;
 import mohalim.islamic.moazen.core.di.module.ViewModelFactoryModule;
 
@@ -20,6 +21,7 @@ import mohalim.islamic.moazen.core.di.module.ViewModelFactoryModule;
                 AndroidSupportInjectionModule.class,
                 ActivityBuilderModule.class,
                 ServiceBuilderModule.class,
+                BroadCastReceiverBuilderModule.class,
                 ViewModelFactoryModule.class,
                 AppModule.class
         })

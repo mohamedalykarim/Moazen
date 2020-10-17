@@ -1,2 +1,2 @@
-include ':app', ':llttz'
+include ':app'
 rootProject.name='Moazen'
