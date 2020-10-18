@@ -75,6 +75,9 @@ public class AzanBroadcastReceiver extends BroadcastReceiver {
             Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
             azanPlayIntent.setAction("reminder");
             azanPlayIntent.putExtra(Constants.PLAYER_SERVICE_TYPE, Constants.PLAYER_REMINDER);
+            azanPlayIntent.putExtra(Constants.AZAN_TYPE, azanType);
+            initReminderNotification(context, azanType);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(azanPlayIntent);
             } else {
@@ -132,6 +135,44 @@ public class AzanBroadcastReceiver extends BroadcastReceiver {
                     .setSmallIcon(R.drawable.ic_masjed_icon)
                     .setContentTitle("حان الان موعد اذان "+ Utils.getAzantTypeName(context, azanType))
                     .setContentText("حان الان موعد اذان "+Utils.getAzantTypeName(context, azanType)+" متبيق على اذان "+Utils.getNextAzantTypeName(context, azanType) +" "+ remainTime)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .addAction(R.drawable.ic_stop_play,"Stop",
+                            snoozePendingIntent);
+        }
+
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(Constants.NOTIFICATION_ID, builder.build());
+
+    }
+
+    public void initReminderNotification(Context context, int azanType){
+        Log.d(TAG, "initReminderNotification: ");
+        Intent snoozeIntent = new Intent(context, AzanBroadcastReceiver.class);
+        snoozeIntent.setAction("Close");
+        snoozeIntent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_STOP);
+        PendingIntent snoozePendingIntent =
+                PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
+
+        NotificationCompat.Builder builder = null;
+
+        Locale currentLocale = context.getResources().getConfiguration().locale;
+
+        if (currentLocale.getLanguage().equals("en")){
+            builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_masjed_icon)
+                    .setContentTitle("5 Minutes till "+ Utils.getAzantTypeName(context, azanType) + " azan")
+                    .setContentText("5 Minutes till " + Utils.getAzantTypeName(context, azanType) + " azan")
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .addAction(R.drawable.ic_stop_play,"Stop",
+                            snoozePendingIntent);
+        }else if (currentLocale.getLanguage().equals("ar")){
+            builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_masjed_icon)
+                    .setContentTitle("باقي 5 دقائق علي اذان  "+ Utils.getAzantTypeName(context, azanType))
+                    .setContentText("باقي 5 دقائق علي اذان  "+ Utils.getAzantTypeName(context, azanType))
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .addAction(R.drawable.ic_stop_play,"Stop",
                             snoozePendingIntent);

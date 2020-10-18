@@ -8,13 +8,6 @@ public class Constants {
     public static final int AZAN_MAGHREB = 5;
     public static final int AZAN_ESHAA = 6;
 
-    public static final int AZAN_FUGR_REMINDER = 7;
-    public static final int AZAN_SHOROQ_REMINDER = 8;
-    public static final int AZAN_ZUHR_REMINDER = 9;
-    public static final int AZAN_ASR_REMINDER = 10;
-    public static final int AZAN_MAGHREB_REMINDER = 11;
-    public static final int AZAN_ESHAA_REMINDER = 12;
-
     public static final String AZAN_TYPE = "azan_type";
     public static final String AZAN_RECEIVER_ORDER = "azan_receiver_order";
     public static final String AZAN_RECEIVER_ORDER_INIT_AZAN =  "azan_receiver_order_init_azan";

@@ -35,11 +35,11 @@ public class AzanTimesWorker extends Worker {
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 
 
-        cancelReminder(alarmManager, Constants.AZAN_FUGR_REMINDER);
-        cancelReminder(alarmManager, Constants.AZAN_ZUHR_REMINDER);
-        cancelReminder(alarmManager, Constants.AZAN_ASR_REMINDER);
-        cancelReminder(alarmManager, Constants.AZAN_MAGHREB_REMINDER);
-        cancelReminder(alarmManager, Constants.AZAN_ESHAA_REMINDER);
+        cancelReminder(alarmManager, Constants.AZAN_FUGR);
+        cancelReminder(alarmManager, Constants.AZAN_ZUHR);
+        cancelReminder(alarmManager, Constants.AZAN_ASR);
+        cancelReminder(alarmManager, Constants.AZAN_MAGHREB);
+        cancelReminder(alarmManager, Constants.AZAN_ESHAA);
 
         cancelAzan(alarmManager, Constants.AZAN_FUGR);
         cancelAzan(alarmManager, Constants.AZAN_ZUHR);
@@ -47,11 +47,11 @@ public class AzanTimesWorker extends Worker {
         cancelAzan(alarmManager, Constants.AZAN_MAGHREB);
         cancelAzan(alarmManager, Constants.AZAN_ESHAA);
 
-        setReminder(alarmManager,prayerTimes[0], Constants.AZAN_FUGR_REMINDER);
-        setReminder(alarmManager, prayerTimes[2], Constants.AZAN_ASR_REMINDER);
-        setReminder(alarmManager, prayerTimes[3], Constants.AZAN_MAGHREB_REMINDER);
-        setReminder(alarmManager, prayerTimes[5], Constants.AZAN_ESHAA_REMINDER);
-        setReminder(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA_REMINDER);
+        setReminder(alarmManager,prayerTimes[0], Constants.AZAN_FUGR);
+        setReminder(alarmManager, prayerTimes[2], Constants.AZAN_ZUHR);
+        setReminder(alarmManager, prayerTimes[3], Constants.AZAN_ASR);
+        setReminder(alarmManager, prayerTimes[5], Constants.AZAN_MAGHREB);
+        setReminder(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA);
 
         setAzan(alarmManager,prayerTimes[0], Constants.AZAN_FUGR);
         setAzan(alarmManager,prayerTimes[2], Constants.AZAN_ZUHR);
@@ -59,15 +59,17 @@ public class AzanTimesWorker extends Worker {
         setAzan(alarmManager, prayerTimes[5], Constants.AZAN_ESHAA);
         setAzan(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA);
 
-        setAzan(alarmManager,"21:25", Constants.AZAN_ESHAA);
+//        setAzan(alarmManager,"21:25", Constants.AZAN_ESHAA);
+//        setReminder(alarmManager,"22:45", Constants.AZAN_FUGR);
+
 
 
         return Result.success();
     }
 
-    private void cancelReminder(AlarmManager alarmManager, int reminderType) {
+    private void cancelReminder(AlarmManager alarmManager, int azanType) {
         Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), reminderType, intent, 0);
+        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), azanType, intent, 0);
         alarmManager.cancel(alarmIntent);
     }
 
@@ -77,7 +79,7 @@ public class AzanTimesWorker extends Worker {
         alarmManager.cancel(alarmIntent);
     }
 
-    private void setReminder(AlarmManager alarmManager, String time, int reminderType) {
+    private void setReminder(AlarmManager alarmManager, String time, int azanType) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time.substring(0,2)));
         calendar.set(Calendar.MINUTE, Integer.parseInt(time.substring(3,5)));
@@ -95,8 +97,9 @@ public class AzanTimesWorker extends Worker {
             Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
             intent.setAction("mohalim.islamic.moazen.START");
             intent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_INIT_REMINDER);
+            intent.putExtra(Constants.AZAN_TYPE, azanType);
 
-            PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), reminderType, intent, 0);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
             if (Build.VERSION.SDK_INT >= 23) {
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             } else if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 23) {
