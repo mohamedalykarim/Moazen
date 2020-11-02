@@ -1,6 +1,8 @@
 package mohalim.islamic.moazen.ui.main;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -9,10 +11,13 @@ import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 
 import java.util.Calendar;
@@ -73,7 +78,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        mViewModel = ViewModelProviders.of(this, factory).get(MainViewModel.class);
+        mViewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
+
+        askForPermission();
 
         binding.prayerTimesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,8 +90,6 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-
-
         binding.settingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,14 +97,26 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+
+
+    }
+
+    private void askForPermission() {
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 0);
+        }else {
+            startManager();
+        }
+    }
+
+    private void startManager() {
         Data data = new Data.Builder().putStringArray("prayerTimes",prayTimes).build();
         PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
                 AzanTimesWorker.class,
                 90,
                 TimeUnit.MINUTES
         ).setInputData(data).build();
-
-
 
         manager = WorkManager.getInstance(this);
 
@@ -109,9 +126,6 @@ public class MainActivity extends BaseActivity {
                 ExistingPeriodicWorkPolicy.REPLACE,
                 periodicWorkRequest
         );
-
-        firstTimeAppOpened();
-
     }
 
     @Override
@@ -125,13 +139,25 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_CANCELED && requestCode == 0){
+            if (!Settings.canDrawOverlays(this)) {
+                Toast.makeText(this, "You must permit drawing over other apps", Toast.LENGTH_SHORT).show();
+            }else {
+                startManager();
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
         if (mediaPlayer.getCurrentPosition() > 0){
             Intent azanIntent = new Intent();
-            azanIntent.setAction("mohalim.islamic.moazen.START");
-            azanIntent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_RESUME);
+            azanIntent.setAction(Constants.AZAN_RECEIVER_ORDER_RESUME);
             Log.d(TAG, "onDestroy: "+ mediaPlayer.getCurrentPosition());
             azanIntent.putExtra(Constants.PLAYER_POSITION, mediaPlayer.getCurrentPosition());
             sendBroadcast(azanIntent);

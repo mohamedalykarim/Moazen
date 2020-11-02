@@ -3,21 +3,34 @@ package mohalim.islamic.moazen.core.service;
 import android.app.Service;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.utils.Constants;
+import mohalim.islamic.moazen.core.utils.Utils;
 
 public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletionListener,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
@@ -35,36 +48,162 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     private int resumePosition;
     private AudioManager audioManager;
 
+    private View mFloatingView;
+    private WindowManager mWindowManager;
+
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: Start Command azan player service" + mediaPlayer.getCurrentPosition());
+        if (intent == null) return Service.START_NOT_STICKY;
+        if (intent.getAction() == null) return Service.START_NOT_STICKY;
 
-        if (intent.hasExtra(Constants.PLAYER_POSITION)){
-            Log.d(TAG, "onStartCommand: "+ intent.getIntExtra(Constants.PLAYER_POSITION,0));
-            mediaPlayer.seekTo(intent.getIntExtra(Constants.PLAYER_POSITION,0));
-            mediaPlayer.start();
-        }
+        String action = intent.getAction();
 
-        Log.d(TAG, "has type: "+intent.getStringExtra(Constants.PLAYER_SERVICE_TYPE));
-
-        if (!intent.hasExtra(Constants.PLAYER_SERVICE_TYPE)) return Service.START_NOT_STICKY;
-
-        String type = intent.getStringExtra(Constants.PLAYER_SERVICE_TYPE);
-        if (type.equals(Constants.PLAYER_REMINDER)){
+        if (action.equals(Constants.PLAYER_REMINDER)){
             changeMedia(R.raw.reminder);
             mediaPlayer.start();
-            Log.d(TAG, "onStartCommand: Player reminder");
-        } else if (type.equals(Constants.PLAYER_AZAN)){
+        } else if (action.equals(Constants.PLAYER_AZAN)){
+            int azanType = intent.getIntExtra(Constants.AZAN_TYPE,1);
             changeMedia(R.raw.quds);
             mediaPlayer.start();
-            Log.d(TAG, "onStartCommand: Player azan");
-        }if (type.equals(Constants.AZAN_RECEIVER_ORDER_STOP)){
+            startWidget(azanType);
+
+        }else if (action.equals(Constants.AZAN_RECEIVER_ORDER_STOP)){
             if (mediaPlayer.isPlaying()){
                 mediaPlayer.seekTo(0);
                 mediaPlayer.stop();
             }
+        }else if (action.equals(Constants.AZAN_RECEIVER_ORDER_RESUME)){
+            if (intent.hasExtra(Constants.PLAYER_POSITION)){
+                mediaPlayer.seekTo(intent.getIntExtra(Constants.PLAYER_POSITION,0));
+                mediaPlayer.start();
+            }
         }
 
+
         return Service.START_NOT_STICKY;
+    }
+
+    private void startWidget(int azanType) {
+        mFloatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null);
+
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        //Specify the view position
+        params.gravity = Gravity.TOP | Gravity.LEFT;        //Initially view will be added to top-left corner
+        params.x = 0;
+        params.y = 100;
+
+        //Add the view to the window
+        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        mWindowManager.addView(mFloatingView, params);
+
+        final View collapsedView = mFloatingView.findViewById(R.id.collapse_view);
+        final View expandedView = mFloatingView.findViewById(R.id.expanded_container);
+        final ImageView leftImage = mFloatingView.findViewById(R.id.leftImage);
+        final ImageView rightImage = mFloatingView.findViewById(R.id.rightImage);
+        final ImageView azanNowImg = mFloatingView.findViewById(R.id.azanNowImg);
+        final Button endAzanBtn = mFloatingView.findViewById(R.id.endAzanBtn);
+
+        switch (azanType) {
+            case Constants.AZAN_FUGR:
+                azanNowImg.setImageResource(R.drawable.widget_azan_fugr);
+                break;
+            case Constants.AZAN_ZUHR:
+                azanNowImg.setImageResource(R.drawable.widget_azan_zuhr);
+                break;
+            case Constants.AZAN_ASR:
+                azanNowImg.setImageResource(R.drawable.widget_azan_asr);
+                break;
+            case Constants.AZAN_MAGHREB:
+                azanNowImg.setImageResource(R.drawable.widget_azan_maghreb);
+                break;
+            case Constants.AZAN_ESHAA:
+                azanNowImg.setImageResource(R.drawable.widget_azan_eshaa);
+                break;
+        }
+
+        endAzanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopSelf();
+            }
+        });
+
+        if (Locale.getDefault().getLanguage().equals("ar")){
+            FrameLayout.LayoutParams leftParamas =new FrameLayout.LayoutParams(
+                    (int) Utils.convertDpToPixel(50, getApplicationContext()),
+                    (int) Utils.convertDpToPixel(100, getApplicationContext())
+            );
+
+            leftParamas.gravity=Gravity.END;
+            leftImage.setLayoutParams(leftParamas);
+            leftImage.setScaleType(ImageView.ScaleType.FIT_END);
+
+
+            FrameLayout.LayoutParams rightParamas =new FrameLayout.LayoutParams(
+                    (int) Utils.convertDpToPixel(50, getApplicationContext()),
+                    (int) Utils.convertDpToPixel(100, getApplicationContext())
+            );
+
+            rightParamas.gravity=Gravity.START;
+            rightImage.setLayoutParams(rightParamas);
+            rightImage.setScaleType(ImageView.ScaleType.FIT_START);
+        }
+
+        mFloatingView.findViewById(R.id.root_container).setOnTouchListener(new View.OnTouchListener() {
+            private int initialX;
+            private int initialY;
+            private float initialTouchX;
+            private float initialTouchY;
+
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+
+                        //remember the initial position.
+                        initialX = params.x;
+                        initialY = params.y;
+
+                        //get the touch location
+                        initialTouchX = event.getRawX();
+                        initialTouchY = event.getRawY();
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        int Xdiff = (int) (event.getRawX() - initialTouchX);
+                        int Ydiff = (int) (event.getRawY() - initialTouchY);
+
+
+                        //The check for Xdiff <10 && YDiff< 10 because sometime elements moves a little while clicking.
+                        //So that is click event.
+                        if (Xdiff < 10 && Ydiff < 10) {
+                            if (isViewCollapsed()) {
+                                //When user clicks on the image view of the collapsed layout,
+                                //visibility of the collapsed layout will be changed to "View.GONE"
+                                //and expanded view will become visible.
+                                collapsedView.setVisibility(View.GONE);
+                                expandedView.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        //Calculate the X and Y coordinates of the view.
+                        params.x = initialX + (int) (event.getRawX() - initialTouchX);
+                        params.y = initialY + (int) (event.getRawY() - initialTouchY);
+
+
+                        //Update the layout with new X & Y coordinate
+                        mWindowManager.updateViewLayout(mFloatingView, params);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void changeMedia(int file) {
@@ -84,18 +223,19 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate: Create azan player service");
+    }
+
+    private boolean isViewCollapsed() {
+        return mFloatingView == null || mFloatingView.findViewById(R.id.collapse_view).getVisibility() == View.VISIBLE;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind: Bind Service");
         return iBinder;
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        Log.d(TAG, "onTaskRemoved: Task remove in azan player service");
         super.onTaskRemoved(rootIntent);
     }
 
@@ -188,6 +328,8 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        if (mFloatingView != null) mWindowManager.removeView(mFloatingView);
 
         if (mediaPlayer != null) {
             stopMedia();

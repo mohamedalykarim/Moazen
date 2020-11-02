@@ -5,7 +5,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -31,7 +33,11 @@ public class AzanTimesWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.d(TAG, "set azan");
+        if (!Settings.canDrawOverlays(getApplicationContext())) {
+            return Result.failure();
+        }
+
+
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 
 
@@ -56,12 +62,11 @@ public class AzanTimesWorker extends Worker {
         setAzan(alarmManager,prayerTimes[0], Constants.AZAN_FUGR);
         setAzan(alarmManager,prayerTimes[2], Constants.AZAN_ZUHR);
         setAzan(alarmManager, prayerTimes[3], Constants.AZAN_ASR);
-        setAzan(alarmManager, prayerTimes[5], Constants.AZAN_ESHAA);
+        setAzan(alarmManager, prayerTimes[5], Constants.AZAN_MAGHREB);
         setAzan(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA);
 
-//        setAzan(alarmManager,"21:25", Constants.AZAN_ESHAA);
-//        setReminder(alarmManager,"22:45", Constants.AZAN_FUGR);
-
+//        setAzan(alarmManager,"12:60", Constants.AZAN_ESHAA);
+//        setReminder(alarmManager,"19:07", Constants.AZAN_FUGR);
 
 
         return Result.success();
@@ -69,13 +74,13 @@ public class AzanTimesWorker extends Worker {
 
     private void cancelReminder(AlarmManager alarmManager, int azanType) {
         Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), azanType, intent, 0);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
         alarmManager.cancel(alarmIntent);
     }
 
     private void cancelAzan(AlarmManager alarmManager, int azanType) {
         Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), azanType, intent, 0);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
         alarmManager.cancel(alarmIntent);
     }
 
@@ -92,11 +97,8 @@ public class AzanTimesWorker extends Worker {
         nowCalendar.setTime(new Date());
 
         if (calendar.getTimeInMillis() > nowCalendar.getTimeInMillis()){
-            Log.d(TAG, "setting time more than now time " + calendar.getTimeInMillis());
-
             Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
-            intent.setAction("mohalim.islamic.moazen.START");
-            intent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_INIT_REMINDER);
+            intent.setAction(Constants.AZAN_RECEIVER_ORDER_INIT_REMINDER);
             intent.putExtra(Constants.AZAN_TYPE, azanType);
 
             PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
@@ -119,11 +121,9 @@ public class AzanTimesWorker extends Worker {
         nowCalendar.setTime(new Date());
 
         if (calendar.getTimeInMillis() > nowCalendar.getTimeInMillis()){
-            Log.d(TAG, "setting time more than now time " + calendar.getTimeInMillis());
 
             Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
-            intent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_INIT_AZAN);
-            intent.setAction("mohalim.islamic.moazen.START");
+            intent.setAction(Constants.AZAN_RECEIVER_ORDER_INIT_AZAN);
             intent.putExtra(Constants.AZAN_TYPE, azanType);
 
             PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);

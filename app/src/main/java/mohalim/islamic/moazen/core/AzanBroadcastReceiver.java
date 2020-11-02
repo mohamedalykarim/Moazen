@@ -37,67 +37,77 @@ public class AzanBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         AndroidInjection.inject(this, context);
 
+        if (intent == null) return;
+        if (intent.getAction() == null) return;
+
         int azanType = 1;
         if (intent.hasExtra(Constants.AZAN_TYPE)){
             azanType = intent.getIntExtra(Constants.AZAN_TYPE,1);
         }
 
-        Log.d(TAG, "onReceive: AzanBroadcastReceiver");
 
-        if (!intent.hasExtra(Constants.AZAN_RECEIVER_ORDER)) return;
-        String order = intent.getStringExtra(Constants.AZAN_RECEIVER_ORDER);
+        String action = intent.getAction();
 
+        switch (action) {
+            case Constants.AZAN_RECEIVER_ORDER_INIT_AZAN: {
+                Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
+                azanPlayIntent.setAction(Constants.PLAYER_AZAN);
+                azanPlayIntent.putExtra(Constants.AZAN_TYPE, azanType);
 
-        if (order.equals(Constants.AZAN_RECEIVER_ORDER_INIT_AZAN)){
-            Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
-            azanPlayIntent.putExtra(Constants.PLAYER_SERVICE_TYPE, Constants.PLAYER_AZAN);
-            azanPlayIntent.putExtra(Constants.AZAN_TYPE, azanType);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(azanPlayIntent);
+                } else {
+                    context.startService(azanPlayIntent);
+                }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(azanPlayIntent);
-            } else {
-                context.startService(azanPlayIntent);
+                initNotification(context, azanType);
+
+                break;
             }
 
-            initNotification(context, azanType);
+            case Constants.AZAN_RECEIVER_ORDER_INIT_REMINDER: {
+                Log.d(TAG, "onReceive: reminder");
+                Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
+                azanPlayIntent.setAction(Constants.PLAYER_REMINDER);
+                azanPlayIntent.putExtra(Constants.AZAN_TYPE, azanType);
+                initReminderNotification(context, azanType);
 
-        }else if (order.equals(Constants.AZAN_RECEIVER_ORDER_RESUME)){
-            Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
-            azanPlayIntent.setAction("resume");
-            azanPlayIntent.putExtra(Constants.PLAYER_POSITION, intent.getIntExtra(Constants.PLAYER_POSITION,0));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(azanPlayIntent);
-            } else {
-                context.startService(azanPlayIntent);
-            }
-        }else if (order.equals(Constants.AZAN_RECEIVER_ORDER_INIT_REMINDER)){
-            Log.d(TAG, "onReceive: init reminder");
-            Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
-            azanPlayIntent.setAction("reminder");
-            azanPlayIntent.putExtra(Constants.PLAYER_SERVICE_TYPE, Constants.PLAYER_REMINDER);
-            azanPlayIntent.putExtra(Constants.AZAN_TYPE, azanType);
-            initReminderNotification(context, azanType);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(azanPlayIntent);
-            } else {
-                context.startService(azanPlayIntent);
-            }
-        }else if (order.equals(Constants.AZAN_RECEIVER_ORDER_STOP)){
-            Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
-            azanPlayIntent.setAction("resume");
-            azanPlayIntent.putExtra(Constants.PLAYER_SERVICE_TYPE, Constants.AZAN_RECEIVER_ORDER_STOP);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(azanPlayIntent);
-            } else {
-                context.startService(azanPlayIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(azanPlayIntent);
+                } else {
+                    context.startService(azanPlayIntent);
+                }
+                break;
             }
 
-            NotificationManager notificationManager =
-                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            case Constants.AZAN_RECEIVER_ORDER_RESUME: {
+                Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
+                azanPlayIntent.setAction(Constants.AZAN_RECEIVER_ORDER_RESUME);
+                azanPlayIntent.putExtra(Constants.PLAYER_POSITION, intent.getIntExtra(Constants.PLAYER_POSITION, 0));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(azanPlayIntent);
+                } else {
+                    context.startService(azanPlayIntent);
+                }
+                break;
+            }
 
-            notificationManager.cancel(Constants.NOTIFICATION_ID);
+            case Constants.AZAN_RECEIVER_ORDER_STOP: {
+                Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
+                azanPlayIntent.setAction(Constants.AZAN_RECEIVER_ORDER_STOP);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(azanPlayIntent);
+                } else {
+                    context.startService(azanPlayIntent);
+                }
 
+                NotificationManager notificationManager =
+                        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                notificationManager.cancel(Constants.NOTIFICATION_ID);
+
+                break;
+            }
         }
 
 
@@ -108,8 +118,7 @@ public class AzanBroadcastReceiver extends BroadcastReceiver {
 
     public void initNotification(Context context, int azanType){
         Intent snoozeIntent = new Intent(context, AzanBroadcastReceiver.class);
-        snoozeIntent.setAction("Close");
-        snoozeIntent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_STOP);
+        snoozeIntent.setAction(Constants.AZAN_RECEIVER_ORDER_STOP);
         PendingIntent snoozePendingIntent =
                 PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
 
@@ -151,8 +160,7 @@ public class AzanBroadcastReceiver extends BroadcastReceiver {
     public void initReminderNotification(Context context, int azanType){
         Log.d(TAG, "initReminderNotification: ");
         Intent snoozeIntent = new Intent(context, AzanBroadcastReceiver.class);
-        snoozeIntent.setAction("Close");
-        snoozeIntent.putExtra(Constants.AZAN_RECEIVER_ORDER, Constants.AZAN_RECEIVER_ORDER_STOP);
+        snoozeIntent.setAction(Constants.AZAN_RECEIVER_ORDER_STOP);
         PendingIntent snoozePendingIntent =
                 PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
 
