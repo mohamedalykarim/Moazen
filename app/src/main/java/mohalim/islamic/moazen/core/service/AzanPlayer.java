@@ -7,7 +7,9 @@ import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,6 +23,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+
+import androidx.work.ListenableWorker;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -64,7 +68,13 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
             int azanType = intent.getIntExtra(Constants.AZAN_TYPE,1);
             changeMedia(R.raw.quds);
             mediaPlayer.start();
-            startWidget(azanType);
+
+
+            if(Build.VERSION.SDK_INT >= 23) {
+                if (Settings.canDrawOverlays(getApplicationContext())) {
+                    startWidget(azanType);
+                }
+            }
 
         }else if (action.equals(Constants.AZAN_RECEIVER_ORDER_STOP)){
             if (mediaPlayer.isPlaying()){

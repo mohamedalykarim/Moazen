@@ -12,6 +12,7 @@ import androidx.work.WorkManager;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.Settings;
@@ -73,12 +74,14 @@ public class MainActivity extends BaseActivity {
     @Inject
     MediaPlayer mediaPlayer;
 
+    AddDrawingPermissionDialog addDrawingPermissionDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
         mViewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
+        addDrawingPermissionDialog = new AddDrawingPermissionDialog();
 
         askForPermission();
 
@@ -102,12 +105,22 @@ public class MainActivity extends BaseActivity {
     }
 
     private void askForPermission() {
-        if (!Settings.canDrawOverlays(this)) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, 0);
+        if(Build.VERSION.SDK_INT >= 23) {
+            if (!Settings.canDrawOverlays(this)) {
+
+                if (!addDrawingPermissionDialog.isAdded()){
+                    addDrawingPermissionDialog.show(getSupportFragmentManager(), "AddDrawingPermissionDialog");
+                }
+
+
+            }else {
+                startManager();
+            }
         }else {
-            startManager();
+            //todo
         }
+
+
     }
 
     private void startManager() {
@@ -142,13 +155,18 @@ public class MainActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_CANCELED && requestCode == 0){
+        if(Build.VERSION.SDK_INT >= 23) {
             if (!Settings.canDrawOverlays(this)) {
-                Toast.makeText(this, "You must permit drawing over other apps", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "You must permit drawing over other apps", Toast.LENGTH_LONG).show();
+                    finish();
             }else {
                 startManager();
             }
+        }else {
+            //todo
         }
+
+
     }
 
     @Override

@@ -33,9 +33,13 @@ public class AzanTimesWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        if (!Settings.canDrawOverlays(getApplicationContext())) {
-            return Result.failure();
+        if(Build.VERSION.SDK_INT >= 23) {
+            if (!Settings.canDrawOverlays(getApplicationContext())) {
+                return Result.failure();
+            }
         }
+
+
 
 
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
