@@ -212,7 +212,7 @@
 
 
                             <Button
-                                android:id="@+id/calType2Btn"
+                                android:id="@+id/calType1Btn"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -224,7 +224,7 @@
                                 android:textSize="10sp" />
 
                             <Button
-                                android:id="@+id/calType6Btn"
+                                android:id="@+id/calType2Btn"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -236,7 +236,7 @@
                                 android:textSize="10sp" />
 
                             <Button
-                                android:id="@+id/calType5Btn"
+                                android:id="@+id/calType3Btn"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -248,7 +248,7 @@
                                 android:textSize="10sp" />
 
                             <Button
-                                android:id="@+id/calType3Btn"
+                                android:id="@+id/calType4Btn"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -260,7 +260,7 @@
                                 android:textSize="10sp" />
 
                             <Button
-                                android:id="@+id/calType4Btn"
+                                android:id="@+id/calType5Btn"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -272,7 +272,7 @@
                                 android:textSize="10sp" />
 
                             <Button
-                                android:id="@+id/calType1Btn"
+                                android:id="@+id/calType6Btn"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -367,14 +367,26 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/juristicMethodBtnsContainer" />
 
+                        <Button
+                            android:id="@+id/juristicMethodEdit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/setting_grediant"
+                            android:text="Edit"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/juristicMethodTv" />
+
                         <LinearLayout
                             android:id="@+id/juristicMethodBtnsContainer"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
+                            android:visibility="gone"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/juristicMethodTv">
+                            app:layout_constraintTop_toBottomOf="@+id/juristicMethodEdit">
 
 
                             <Button

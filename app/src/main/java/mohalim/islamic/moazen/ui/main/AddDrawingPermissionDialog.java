@@ -31,7 +31,7 @@ public class AddDrawingPermissionDialog extends DialogFragment implements HasAnd
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         DialogAddDrawingPermissionBinding binding = DialogAddDrawingPermissionBinding.inflate(inflater, container, false);
 
-        binding.grantBtn.setOnClickListener(new View.OnClickListener() {
+        binding.allowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getActivity().getPackageName()));

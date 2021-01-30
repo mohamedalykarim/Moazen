@@ -23,4 +23,5 @@ public class Constants {
 
     public static final String NOTIFICATION_CHANNEL_ID = "notification_channel_id";
     public static final int NOTIFICATION_ID = 27240;
+    public static final long MANAGER_REPEAT_INTERVAL = 90;
 }

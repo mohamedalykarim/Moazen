@@ -18,6 +18,7 @@ import java.util.Date;
 
 import mohalim.islamic.moazen.core.AzanBroadcastReceiver;
 import mohalim.islamic.moazen.core.utils.Constants;
+import mohalim.islamic.moazen.core.utils.Utils;
 
 public class AzanTimesWorker extends Worker {
     private final String TAG = "AzanTimesWorker";
@@ -69,7 +70,7 @@ public class AzanTimesWorker extends Worker {
         setAzan(alarmManager, prayerTimes[5], Constants.AZAN_MAGHREB);
         setAzan(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA);
 
-//        setAzan(alarmManager,"12:60", Constants.AZAN_ESHAA);
+//        setAzan(alarmManager,"12:49", Constants.AZAN_ESHAA);
 //        setReminder(alarmManager,"19:07", Constants.AZAN_FUGR);
 
 
@@ -80,12 +81,15 @@ public class AzanTimesWorker extends Worker {
         Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
         alarmManager.cancel(alarmIntent);
+        Log.d(TAG, "cancelReminder: "+ Utils.getNextAzantTypeName(getApplicationContext(), azanType));
     }
 
     private void cancelAzan(AlarmManager alarmManager, int azanType) {
         Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
         alarmManager.cancel(alarmIntent);
+        Log.d(TAG, "cancelAzan: "+ Utils.getAzantTypeName(getApplicationContext(), azanType));
+
     }
 
     private void setReminder(AlarmManager alarmManager, String time, int azanType) {
@@ -112,6 +116,9 @@ public class AzanTimesWorker extends Worker {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
         }
+
+        Log.d(TAG, "setReminder: "+ Utils.getAzantTypeName(getApplicationContext(), azanType));
+
     }
 
     private void setAzan(AlarmManager alarmManager, String time, int azanType) {
@@ -141,6 +148,9 @@ public class AzanTimesWorker extends Worker {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
         }
+
+        Log.d(TAG, "setAzan: "+ Utils.getAzantTypeName(getApplicationContext(), azanType));
+
     }
 
 

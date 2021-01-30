@@ -51,12 +51,13 @@ import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppExecutor;
 import mohalim.islamic.moazen.core.utils.AppSettingHelper;
+import mohalim.islamic.moazen.core.utils.Constants;
 import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.core.viewmodel.ViewModelProviderFactory;
 import mohalim.islamic.moazen.databinding.FragmentSettingBinding;
 
 
-public class SettingFragment extends DaggerFragment {
+public class SettingFragment extends DaggerFragment implements View.OnClickListener {
     private static final String TAG = "SettingFragment";
 
     FragmentSettingBinding binding;
@@ -95,6 +96,21 @@ public class SettingFragment extends DaggerFragment {
 
         binding = FragmentSettingBinding.inflate(inflater, container, false);
         mViewModel = new ViewModelProvider(this, viewModelProviderFactory).get(SettingViewModel.class);
+
+        binding.locationImage.setOnClickListener(this);
+        binding.calTypeEditBtn.setOnClickListener(this);
+        binding.juristicMethodEdit.setOnClickListener(this);
+
+        binding.calType1Btn.setOnClickListener(this);
+        binding.calType2Btn.setOnClickListener(this);
+        binding.calType3Btn.setOnClickListener(this);
+        binding.calType4Btn.setOnClickListener(this);
+        binding.calType5Btn.setOnClickListener(this);
+        binding.calType6Btn.setOnClickListener(this);
+
+        binding.juristicMethod1Btn.setOnClickListener(this);
+        binding.juristicMethod2Btn.setOnClickListener(this);
+
 
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -171,125 +187,6 @@ public class SettingFragment extends DaggerFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
-        binding.locationImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
-                } else {
-
-                    if (!isGPSIsEnabled(getActivity())) {
-                            // notify user
-                            new AlertDialog.Builder(getActivity())
-                                    .setMessage("Sorry GPS is not enabled")
-                                    .setPositiveButton("Open", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                            getActivity().startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel", null)
-                                    .show();
-
-                            goToStartGPS = true;
-
-                    } else {
-                        locationInit();
-                    }
-
-
-                }
-
-
-            }
-        });
-
-        binding.calTypeEditBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.calTypeEditBtn.setVisibility(View.GONE);
-                binding.calTypeBtnsContainer.setVisibility(View.VISIBLE);
-            }
-        });
-
-        binding.calType1Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.calTypeEditBtn.setVisibility(View.VISIBLE);
-                binding.calTypeBtnsContainer.setVisibility(View.GONE);
-                binding.calTypeBtnsContainer.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                AppSettingHelper.setAzanCalculationMethod(getContext(), prayTime.Karachi);
-                binding.calculationTypeTv.setText(getResources().getString(R.string.university_of_islamic_sciences_karachi));
-            }
-        });
-
-
-        binding.calType2Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.calTypeEditBtn.setVisibility(View.VISIBLE);
-                binding.calTypeBtnsContainer.setVisibility(View.GONE);
-                AppSettingHelper.setAzanCalculationMethod(getContext(), prayTime.ISNA);
-                binding.calculationTypeTv.setText(getResources().getString(R.string.islamic_society_of_north_america_isna));
-
-
-            }
-        });
-
-        binding.calType3Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.calTypeEditBtn.setVisibility(View.VISIBLE);
-                binding.calTypeBtnsContainer.setVisibility(View.GONE);
-                AppSettingHelper.setAzanCalculationMethod(getContext(), prayTime.MWL);
-                binding.calculationTypeTv.setText(getResources().getString(R.string.muslim_world_league_mwl));
-
-
-            }
-        });
-
-        binding.calType4Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.calTypeEditBtn.setVisibility(View.VISIBLE);
-                binding.calTypeBtnsContainer.setVisibility(View.GONE);
-                AppSettingHelper.setAzanCalculationMethod(getContext(), prayTime.Makkah);
-                binding.calculationTypeTv.setText(getResources().getString(R.string.umm_al_qura_makkah));
-
-
-            }
-        });
-
-        binding.calType5Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.calTypeEditBtn.setVisibility(View.VISIBLE);
-                binding.calTypeBtnsContainer.setVisibility(View.GONE);
-                AppSettingHelper.setAzanCalculationMethod(getContext(), prayTime.Egypt);
-                binding.calculationTypeTv.setText(getResources().getString(R.string.egyptian_general_authority_of_survey));
-
-            }
-        });
-
-        binding.calType6Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.calTypeEditBtn.setVisibility(View.VISIBLE);
-                binding.calTypeBtnsContainer.setVisibility(View.GONE);
-                AppSettingHelper.setAzanCalculationMethod(getContext(), prayTime.Tehran);
-                binding.calculationTypeTv.setText(getResources().getString(R.string.institute_of_geophysics_university_of_tehran));
-
-            }
-        });
-
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -340,6 +237,7 @@ public class SettingFragment extends DaggerFragment {
 
         binding.loading.setVisibility(View.GONE);
         fusedLocationClient.removeLocationUpdates(locationCallback);
+        startManager();
     }
 
 
@@ -385,15 +283,90 @@ public class SettingFragment extends DaggerFragment {
 
     }
 
-    private void startManager() {
+
+
+    @Override
+    public void onClick(View v) {
+
+        if (v.getId() == binding.locationImage.getId()){
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+            } else {
+
+                if (!isGPSIsEnabled(getActivity())) {
+                    // notify user
+                    new AlertDialog.Builder(getActivity())
+                            .setMessage("Sorry GPS is not enabled")
+                            .setPositiveButton("Open", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                    getActivity().startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+
+                    goToStartGPS = true;
+
+                } else {
+                    locationInit();
+                }
+
+
+            }
+        }else if (v.getId() == binding.calTypeEditBtn.getId()){
+            binding.calTypeEditBtn.setVisibility(View.GONE);
+            binding.calTypeBtnsContainer.setVisibility(View.VISIBLE);
+        }else if (v.getId() == binding.juristicMethodEdit.getId()){
+            binding.juristicMethodEdit.setVisibility(View.GONE);
+            binding.juristicMethodBtnsContainer.setVisibility(View.VISIBLE);
+        }
+
+        else if (v.getId() == binding.calType1Btn.getId()){
+            updateCalMethod(prayTime.ISNA, R.string.islamic_society_of_north_america_isna);
+        }else if (v.getId() == binding.calType2Btn.getId()){
+            updateCalMethod(prayTime.Tehran, R.string.institute_of_geophysics_university_of_tehran);
+        }else if (v.getId() == binding.calType3Btn.getId()){
+            updateCalMethod(prayTime.Egypt, R.string.egyptian_general_authority_of_survey);
+        }else if (v.getId() == binding.calType4Btn.getId()){
+            updateCalMethod(prayTime.MWL, R.string.muslim_world_league_mwl);
+        }else if (v.getId() == binding.calType5Btn.getId()){
+            updateCalMethod(prayTime.Makkah, R.string.umm_al_qura_makkah);
+        }else if (v.getId() == binding.calType6Btn.getId()){
+            updateCalMethod(prayTime.Karachi, R.string.university_of_islamic_sciences_karachi);
+        }else if (v.getId() == binding.juristicMethod1Btn.getId()){
+            updateJuristicMethod(prayTime.Shafii, R.string.shafii);
+        }else if (v.getId() == binding.juristicMethod2Btn.getId()){
+            updateJuristicMethod(prayTime.Hanafi, R.string.hanafi);
+        }
+
+    }
+
+    public void updateCalMethod(int type, int typeName) {
+        binding.calTypeEditBtn.setVisibility(View.VISIBLE);
+        binding.calTypeBtnsContainer.setVisibility(View.GONE);
+        AppSettingHelper.setAzanCalculationMethod(getContext(), type);
+        binding.calculationTypeTv.setText(getResources().getString(typeName));
+        startManager();
+    }
+
+    public void updateJuristicMethod(int type, int typeName) {
+        binding.juristicMethodEdit.setVisibility(View.VISIBLE);
+        binding.juristicMethodBtnsContainer.setVisibility(View.GONE);
+        AppSettingHelper.setAzanJuristicMethod(getContext(), type);
+        binding.juristicMethodTv.setText(getResources().getString(typeName));
+        startManager();
+    }
+
+    public void startManager() {
         Data data = new Data.Builder().putStringArray("prayerTimes",prayTimes).build();
         PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
                 AzanTimesWorker.class,
-                90,
+                Constants.MANAGER_REPEAT_INTERVAL,
                 TimeUnit.MINUTES
         ).setInputData(data).build();
 
-        manager = WorkManager.getInstance(getContext());
+        manager = WorkManager.getInstance(getActivity());
 
 
         manager.enqueueUniquePeriodicWork(
@@ -402,6 +375,4 @@ public class SettingFragment extends DaggerFragment {
                 periodicWorkRequest
         );
     }
-
-
 }

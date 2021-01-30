@@ -32,6 +32,7 @@ import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppDateUtil;
 import mohalim.islamic.moazen.core.utils.AppSettingHelper;
 import mohalim.islamic.moazen.core.utils.Constants;
+import mohalim.islamic.moazen.core.utils.Utils;
 import mohalim.islamic.moazen.core.viewmodel.ViewModelProviderFactory;
 import mohalim.islamic.moazen.databinding.ActivityMainBinding;
 import mohalim.islamic.moazen.ui.bottoms.PrayerTimesBottom;
@@ -127,7 +128,7 @@ public class MainActivity extends BaseActivity {
         Data data = new Data.Builder().putStringArray("prayerTimes",prayTimes).build();
         PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
                 AzanTimesWorker.class,
-                90,
+                Constants.MANAGER_REPEAT_INTERVAL,
                 TimeUnit.MINUTES
         ).setInputData(data).build();
 
@@ -156,14 +157,14 @@ public class MainActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(Build.VERSION.SDK_INT >= 23) {
-            if (!Settings.canDrawOverlays(this)) {
+            if (!Utils.canDrawOverlays(this)) {
                 Toast.makeText(this, "You must permit drawing over other apps", Toast.LENGTH_LONG).show();
                     finish();
             }else {
                 startManager();
             }
         }else {
-            //todo
+            startManager();
         }
 
 

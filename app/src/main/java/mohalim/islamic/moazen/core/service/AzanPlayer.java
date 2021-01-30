@@ -1,6 +1,9 @@
 package mohalim.islamic.moazen.core.service;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.PixelFormat;
@@ -24,16 +27,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 
+import androidx.core.app.NotificationCompat;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ListenableWorker;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import mohalim.islamic.moazen.R;
+import mohalim.islamic.moazen.core.AzanBroadcastReceiver;
 import mohalim.islamic.moazen.core.utils.Constants;
+import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.core.utils.Utils;
 
 public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletionListener,
@@ -43,31 +55,47 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     private final String TAG = "AzanPlayer";
 
 
+
+
     // Binder given to clients
     private final IBinder iBinder = new LocalBinder();
 
     @Inject
     MediaPlayer mediaPlayer;
 
+    @Inject
+    PrayTime prayTime;
+
+    @Inject
+    String[] prayTimes;
+
     private int resumePosition;
     private AudioManager audioManager;
 
     private View mFloatingView;
     private WindowManager mWindowManager;
+    private WorkManager manager;
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) return Service.START_NOT_STICKY;
         if (intent.getAction() == null) return Service.START_NOT_STICKY;
 
+        updateAzanTimes();
+
         String action = intent.getAction();
 
         if (action.equals(Constants.PLAYER_REMINDER)){
+            int azanType = intent.getIntExtra(Constants.AZAN_TYPE,1);
             changeMedia(R.raw.reminder);
             mediaPlayer.start();
+            initReminderNotification(this, azanType);
+
         } else if (action.equals(Constants.PLAYER_AZAN)){
             int azanType = intent.getIntExtra(Constants.AZAN_TYPE,1);
             changeMedia(R.raw.quds);
             mediaPlayer.start();
+
+            initNotification(this, azanType);
 
 
             if(Build.VERSION.SDK_INT >= 23) {
@@ -95,12 +123,22 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     private void startWidget(int azanType) {
         mFloatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null);
 
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
+        final WindowManager.LayoutParams params;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+        }else{
+            params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+        }
 
         //Specify the view position
         params.gravity = Gravity.TOP | Gravity.LEFT;        //Initially view will be added to top-left corner
@@ -346,6 +384,105 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
             mediaPlayer.release();
         }
     }
+
+
+    public void initNotification(Context context, int azanType){
+        Intent snoozeIntent = new Intent(context, AzanBroadcastReceiver.class);
+        snoozeIntent.setAction(Constants.AZAN_RECEIVER_ORDER_STOP);
+        PendingIntent snoozePendingIntent =
+                PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
+
+        NotificationCompat.Builder builder = null;
+
+        Locale currentLocale = context.getResources().getConfiguration().locale;
+
+        String [] timesOfToday = Utils.getAzanTimes(context, Calendar.getInstance().getTimeInMillis(), prayTime);
+        String [] timesOfTomorrow = Utils.getAzanTimes(context, Calendar.getInstance().getTimeInMillis()+24*60*60*1000, prayTime);
+
+        String remainTime = Utils.getRemainTime(azanType, timesOfToday, timesOfTomorrow);
+
+        if (currentLocale.getLanguage().equals("en")){
+            builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_masjed_icon)
+                    .setContentTitle(Utils.getAzantTypeName(context, azanType) + " azan is now")
+                    .setContentText(Utils.getAzantTypeName(context, azanType) + " azan is now, " + remainTime +" till "+ Utils.getNextAzantTypeName(context, azanType) + " Azan")
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .addAction(R.drawable.ic_stop_play,"Stop",
+                            snoozePendingIntent);
+        }else if (currentLocale.getLanguage().equals("ar")){
+            builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_masjed_icon)
+                    .setContentTitle("حان الان موعد اذان "+ Utils.getAzantTypeName(context, azanType))
+                    .setContentText("حان الان موعد اذان "+Utils.getAzantTypeName(context, azanType)+" متبيق على اذان "+Utils.getNextAzantTypeName(context, azanType) +" "+ remainTime)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .addAction(R.drawable.ic_stop_play,"Stop",
+                            snoozePendingIntent);
+        }
+
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        startForeground(Constants.NOTIFICATION_ID, builder.build());
+
+    }
+
+    public void initReminderNotification(Context context, int azanType){
+        Log.d(TAG, "initReminderNotification: ");
+        Intent snoozeIntent = new Intent(context, AzanBroadcastReceiver.class);
+        snoozeIntent.setAction(Constants.AZAN_RECEIVER_ORDER_STOP);
+        PendingIntent snoozePendingIntent =
+                PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
+
+        NotificationCompat.Builder builder = null;
+
+        Locale currentLocale = context.getResources().getConfiguration().locale;
+
+        if (currentLocale.getLanguage().equals("en")){
+            builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_masjed_icon)
+                    .setContentTitle("5 Minutes till "+ Utils.getAzantTypeName(context, azanType) + " azan")
+                    .setContentText("5 Minutes till " + Utils.getAzantTypeName(context, azanType) + " azan")
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .addAction(R.drawable.ic_stop_play,"Stop",
+                            snoozePendingIntent);
+        }else if (currentLocale.getLanguage().equals("ar")){
+            builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_masjed_icon)
+                    .setContentTitle("باقي 5 دقائق علي اذان  "+ Utils.getAzantTypeName(context, azanType))
+                    .setContentText("باقي 5 دقائق علي اذان  "+ Utils.getAzantTypeName(context, azanType))
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .addAction(R.drawable.ic_stop_play,"Stop",
+                            snoozePendingIntent);
+        }
+
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        startForeground(Constants.NOTIFICATION_ID, builder.build());
+
+    }
+
+    private void updateAzanTimes() {
+        Data data = new Data.Builder().putStringArray("prayerTimes",prayTimes).build();
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
+                AzanTimesWorker.class,
+                90,
+                TimeUnit.MINUTES
+        ).setInputData(data).build();
+
+        manager = WorkManager.getInstance(this);
+
+
+        manager.enqueueUniquePeriodicWork(
+                "AzanTimes",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                periodicWorkRequest
+        );
+    }
+
+
 
 }
 
