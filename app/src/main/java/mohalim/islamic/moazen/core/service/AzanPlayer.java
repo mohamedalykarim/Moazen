@@ -13,6 +13,8 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Log;
 import android.view.Gravity;
@@ -55,8 +57,6 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     private final String TAG = "AzanPlayer";
 
 
-
-
     // Binder given to clients
     private final IBinder iBinder = new LocalBinder();
 
@@ -75,6 +75,25 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     private View mFloatingView;
     private WindowManager mWindowManager;
     private WorkManager manager;
+
+
+    PhoneStateListener phoneStateListener = new PhoneStateListener() {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            if (state == TelephonyManager.CALL_STATE_RINGING) {
+                //Incoming call: Pause music
+                mediaPlayer.setVolume(0,0);
+            } else if(state == TelephonyManager.CALL_STATE_IDLE) {
+                //Not in call: Play music
+                mediaPlayer.setVolume(1,1);
+            } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                //A call is dialing, active or on hold
+                mediaPlayer.setVolume(0,0);
+            }
+            super.onCallStateChanged(state, incomingNumber);
+        }
+    };
+
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) return Service.START_NOT_STICKY;
@@ -115,6 +134,12 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
                 mediaPlayer.start();
             }
         }
+
+        TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        if(mgr != null) {
+            mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
+
 
 
         return Service.START_NOT_STICKY;

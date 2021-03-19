@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -110,10 +109,10 @@ public class AzanTimesWorker extends Worker {
             intent.putExtra(Constants.AZAN_TYPE, azanType);
 
             PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
-            if (Build.VERSION.SDK_INT >= 23) {
+            if (Build.VERSION.SDK_INT >= 19) {
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-            } else if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 23) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
         }
 
@@ -138,18 +137,13 @@ public class AzanTimesWorker extends Worker {
             intent.putExtra(Constants.AZAN_TYPE, azanType);
 
             PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
-            if (Build.VERSION.SDK_INT >= 23) {
+            if (Build.VERSION.SDK_INT >= 19) {
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-
-            } else if (Build.VERSION.SDK_INT >= 19) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-
             } else {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
         }
 
-        Log.d(TAG, "setAzan: "+ Utils.getAzantTypeName(getApplicationContext(), azanType));
 
     }
 
