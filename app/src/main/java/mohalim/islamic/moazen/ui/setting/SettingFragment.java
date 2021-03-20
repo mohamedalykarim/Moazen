@@ -178,9 +178,9 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
 
         binding.calculationTypeTv.setText(calMethodName);
         binding.latAndLongAndTimezone.setText(
-                "Latitude : " + String.format("%.2f", Double.valueOf(AppSettingHelper.getLatitude(getActivity()))) + "\n"
-                        + "Longitude : " + String.format("%.2f", Double.valueOf(AppSettingHelper.getLongitude(getActivity()))) + "\n"
-                        + "Timezone : " + AppSettingHelper.getTimeZone(getActivity())
+                getString(R.string.latitude)+" : " + String.format("%.2f", Double.valueOf(AppSettingHelper.getLatitude(getActivity()))) + "\n"
+                        + getString(R.string.longitude)+" : " + String.format("%.2f", Double.valueOf(AppSettingHelper.getLongitude(getActivity()))) + "\n"
+                        + getString(R.string.timezone)+" : " + AppSettingHelper.getTimeZone(getActivity())
         );
 
         return binding.getRoot();

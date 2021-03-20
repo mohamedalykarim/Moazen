@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity {
 
         if(Build.VERSION.SDK_INT >= 23) {
             if (!Utils.canDrawOverlays(this)) {
-                Toast.makeText(this, "You must permit drawing over other apps", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.you_must_permit_drawing_over_other_apps), Toast.LENGTH_LONG).show();
                     finish();
             }else {
                 startManager();
@@ -177,7 +177,6 @@ public class MainActivity extends BaseActivity {
         if (mediaPlayer.getCurrentPosition() > 0){
             Intent azanIntent = new Intent();
             azanIntent.setAction(Constants.AZAN_RECEIVER_ORDER_RESUME);
-            Log.d(TAG, "onDestroy: "+ mediaPlayer.getCurrentPosition());
             azanIntent.putExtra(Constants.PLAYER_POSITION, mediaPlayer.getCurrentPosition());
             sendBroadcast(azanIntent);
         }
@@ -323,17 +322,17 @@ public class MainActivity extends BaseActivity {
 
 
                     if (nextAzan == NEXT_AZAN_FAGR){
-                        binding.remainsTitleTv.setText("Reminder for next prayer Al Fagr : ");
+                        binding.remainsTitleTv.setText(getString(R.string.till_next_prayer)+ getString(R.string.space_) +"\""+ getString(R.string.azan_fagr)+"\" " +getString(R.string.colon_with_space));
                     }else if (nextAzan == NEXT_AZAN_SHOROK){
-                        binding.remainsTitleTv.setText("Reminder for next prayer Al Shoroq : ");
+                        binding.remainsTitleTv.setText(getString(R.string.till_next_prayer)+ getString(R.string.space_) +"\""+  getString(R.string.al_shoroq)+"\" "+getString(R.string.colon_with_space));
                     }else if (nextAzan == NEXT_AZAN_ZOHR){
-                        binding.remainsTitleTv.setText("Reminder for next prayer Al Zohr : ");
+                        binding.remainsTitleTv.setText(getString(R.string.till_next_prayer)+ getString(R.string.space_) +"\""+  getString(R.string.azan_zuhr)+"\" "+getString(R.string.colon_with_space));
                     }else if (nextAzan == NEXT_AZAN_ASR){
-                        binding.remainsTitleTv.setText("Reminder for next prayer Al Asr : ");
+                        binding.remainsTitleTv.setText(getString(R.string.till_next_prayer)+ getString(R.string.space_) +"\""+  getString(R.string.azan_asr)+"\" "+getString(R.string.colon_with_space));
                     }else if (nextAzan == NEXT_AZAN_MAGHREB){
-                        binding.remainsTitleTv.setText("Reminder for next prayer Al Maghreb : ");
+                        binding.remainsTitleTv.setText(getString(R.string.till_next_prayer)+ getString(R.string.space_) +"\""+  getString(R.string.azan_maghreb)+"\" "+getString(R.string.colon_with_space));
                     }else if (nextAzan == NEXT_AZAN_ESHAA){
-                        binding.remainsTitleTv.setText("Reminder for next prayer Al Eshaa :");
+                        binding.remainsTitleTv.setText(getString(R.string.till_next_prayer)+ getString(R.string.space_) +"\""+  getString(R.string.azan_eshaa)+"\" "+getString(R.string.colon_with_space));
                     }
                 }
             });

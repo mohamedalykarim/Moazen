@@ -1,19 +1,45 @@
 <resources>
     <string name="app_name">تطبيق المسلم</string>
 
-    <string name="islamic_society_of_north_america_isna">Islamic Society of North America (ISNA)</string>
-    <string name="institute_of_geophysics_university_of_tehran">Institute of Geophysics, University of Tehran</string>
-    <string name="egyptian_general_authority_of_survey">Egyptian General Authority of Survey</string>
-    <string name="muslim_world_league_mwl">Muslim World League (MWL)</string>
-    <string name="umm_al_qura_makkah">Umm al-Qura, Makkah</string>
-    <string name="university_of_islamic_sciences_karachi">University of Islamic Sciences, Karachi</string>
+    <string name="islamic_society_of_north_america_isna">الجمعية الإسلامية لأمريكا الشمالية</string>
+    <string name="institute_of_geophysics_university_of_tehran">معهد الجيوفيزياء بجامعة طهران</string>
+    <string name="egyptian_general_authority_of_survey">الهيئة المصرية العامة للمساحة</string>
+    <string name="muslim_world_league_mwl">رابطة العالم الاسلامي</string>
+    <string name="umm_al_qura_makkah">أم القرى، مكة</string>
+    <string name="university_of_islamic_sciences_karachi">جامعة العلوم الاسلامية</string>
 
-    <string name="shafii">Shafii</string>
-    <string name="hanafi">Hanafi</string>
+    <string name="shafii">الشافعي</string>
+    <string name="hanafi">الحنفي</string>
 
     <string name="azan_fagr">الفجر</string>
     <string name="azan_zuhr">الظهر</string>
     <string name="azan_asr">العصر</string>
     <string name="azan_maghreb">المغرب</string>
     <string name="azan_eshaa">العشاء</string>
+    <string name="al_shoroq">الشروق</string>
+
+
+    <string name="setting">الاعدادات</string>
+    <string name="prayer_times">اوقات الصلاة</string>
+
+    <string name="alsalah">الصلاة</string>
+    <string name="times">المواقيت</string>
+
+    <string name="allow">السماح للتطبيق</string>
+    <string name="edit">تعديل</string>
+    <string name="close">أغلاق</string>
+
+
+    <string name="you_must_permit_drawing_over_other_apps">لاستخدام التطبيق، يجب منحه خاصية الرسم فوق التطبيقات الاخري حتى يتمكن التطبيق من عرض الاشعارات</string>
+    <string name="your_current_location_is">المكان الحالي هو </string>
+    <string name="cairo">القاهرة</string>
+    <string name="your_selected_azan_times_calculation_type_is">طريقة حساب مواقع الصلاة :</string>
+    <string name="till_next_prayer">المتبقي حتى الصلاة القادمة</string>
+    <string name="space_"> </string>
+    <string name="colon_with_space"> : </string>
+
+    <string name="latitude">خط العرض</string>
+    <string name="longitude">خط الطول</string>
+    <string name="timezone">الوحدة الزمنية</string>
+
 </resources>

@@ -5,8 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -18,6 +20,8 @@ import java.util.Date;
 import mohalim.islamic.moazen.core.AzanBroadcastReceiver;
 import mohalim.islamic.moazen.core.utils.Constants;
 import mohalim.islamic.moazen.core.utils.Utils;
+
+import static android.content.Context.POWER_SERVICE;
 
 public class AzanTimesWorker extends Worker {
     private final String TAG = "AzanTimesWorker";
@@ -39,7 +43,11 @@ public class AzanTimesWorker extends Worker {
             }
         }
 
+        PowerManager.WakeLock screenLock = ((PowerManager)getApplicationContext().getSystemService(POWER_SERVICE))
+                .newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | PowerManager.ACQUIRE_CAUSES_WAKEUP, "moazen:TAG" );
+        screenLock.acquire(2 * 60 * 1000);
 
+        screenLock.release();
 
 
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
@@ -71,6 +79,8 @@ public class AzanTimesWorker extends Worker {
 
 //        setAzan(alarmManager,"12:49", Constants.AZAN_ESHAA);
 //        setReminder(alarmManager,"19:07", Constants.AZAN_FUGR);
+
+
 
 
         return Result.success();
@@ -109,8 +119,10 @@ public class AzanTimesWorker extends Worker {
             intent.putExtra(Constants.AZAN_TYPE, azanType);
 
             PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
-            if (Build.VERSION.SDK_INT >= 19) {
+            if (Build.VERSION.SDK_INT >= 23) {
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+            } else if (Build.VERSION.SDK_INT >= 19) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             } else {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }
@@ -137,8 +149,10 @@ public class AzanTimesWorker extends Worker {
             intent.putExtra(Constants.AZAN_TYPE, azanType);
 
             PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
-            if (Build.VERSION.SDK_INT >= 19) {
+            if (Build.VERSION.SDK_INT >= 23) {
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+            }else if (Build.VERSION.SDK_INT >= 19) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             } else {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
             }

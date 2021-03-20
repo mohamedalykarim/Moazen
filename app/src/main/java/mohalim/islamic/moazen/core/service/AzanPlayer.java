@@ -76,6 +76,9 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     private WindowManager mWindowManager;
     private WorkManager manager;
 
+    NotificationManager notificationManager =
+            (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
 
     PhoneStateListener phoneStateListener = new PhoneStateListener() {
         @Override
@@ -127,6 +130,8 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
             if (mediaPlayer.isPlaying()){
                 mediaPlayer.seekTo(0);
                 mediaPlayer.stop();
+                notificationManager.cancel(Constants.NOTIFICATION_ID);
+
             }
         }else if (action.equals(Constants.AZAN_RECEIVER_ORDER_RESUME)){
             if (intent.hasExtra(Constants.PLAYER_POSITION)){
@@ -445,9 +450,6 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
         }
 
 
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
         startForeground(Constants.NOTIFICATION_ID, builder.build());
 
     }
@@ -484,6 +486,7 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
 
         startForeground(Constants.NOTIFICATION_ID, builder.build());
 

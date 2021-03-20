@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout >
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.drawerlayout.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/drawer_layout"
         tools:context=".ui.main.MainActivity"
         android:layout_width="match_parent"
@@ -84,7 +84,8 @@
                 app:layout_constraintBottom_toTopOf="@+id/imageView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/counterTV">
+                app:layout_constraintTop_toBottomOf="@+id/counterTV"
+                android:baselineAligned="false">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -96,7 +97,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:paddingStart="45dp"
-                        android:text="Prayer times"
+                        android:text="@string/prayer_times"
                         android:textColor="@color/colorAccent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -125,7 +126,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:paddingStart="45dp"
-                        android:text="Setting"
+                        android:text="@string/setting"
                         android:textColor="@color/colorAccent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
