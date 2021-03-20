@@ -160,17 +160,17 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            tools:visibility="visible">
+<!--        <com.google.android.material.navigation.NavigationView-->
+<!--            android:id="@+id/nav_view"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="start"-->
+<!--            android:fitsSystemWindows="true"-->
+<!--            tools:visibility="visible">-->
 
-            <include layout="@layout/navigation_view"/>
+<!--            <include layout="@layout/navigation_view"/>-->
 
-        </com.google.android.material.navigation.NavigationView>
+<!--        </com.google.android.material.navigation.NavigationView>-->
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
