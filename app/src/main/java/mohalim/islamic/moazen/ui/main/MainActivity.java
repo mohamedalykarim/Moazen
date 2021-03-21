@@ -76,6 +76,7 @@ public class MainActivity extends BaseActivity {
     MediaPlayer mediaPlayer;
 
     AddDrawingPermissionDialog addDrawingPermissionDialog;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +101,6 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(MainActivity.this, SettingActivity.class));
             }
         });
-
 
 
     }
@@ -153,6 +153,12 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        countDownTimer.cancel();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -184,6 +190,7 @@ public class MainActivity extends BaseActivity {
     }
 
     void azanTimes(String day, int monthNumber){
+        prayTimes = Utils.getPrayerTimes(this);
 
 
             fagr = day + "-" + monthNumber
@@ -281,7 +288,7 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void run() {
                     binding.progressBar.setVisibility(View.INVISIBLE);
-                    CountDownTimer countDownTimer = new CountDownTimer(finalDelayToAzan,1000) {
+                    countDownTimer = new CountDownTimer(finalDelayToAzan,1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             String remainTime = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millisUntilFinished),

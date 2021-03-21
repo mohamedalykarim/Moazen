@@ -44,7 +44,7 @@ public class AzanTimesWorker extends Worker {
         }
 
         PowerManager.WakeLock screenLock = ((PowerManager)getApplicationContext().getSystemService(POWER_SERVICE))
-                .newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | PowerManager.ACQUIRE_CAUSES_WAKEUP, "moazen:TAG" );
+                .newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "moazen:TAG" );
         screenLock.acquire(2 * 60 * 1000);
 
         screenLock.release();

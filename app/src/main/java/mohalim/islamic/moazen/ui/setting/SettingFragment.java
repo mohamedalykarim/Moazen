@@ -183,6 +183,15 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
                         + getString(R.string.timezone)+" : " + AppSettingHelper.getTimeZone(getActivity())
         );
 
+
+        int juristicMethod = AppSettingHelper.getAzanJuristicMethod(getActivity(), prayTime.Shafii);
+        if (juristicMethod == prayTime.Shafii ){
+            binding.juristicMethodTv.setText(getResources().getString(R.string.shafii));
+        }else if (juristicMethod == prayTime.Hanafi ){
+            binding.juristicMethodTv.setText(getResources().getString(R.string.hanafi));
+        }
+
+
         return binding.getRoot();
     }
 
@@ -296,14 +305,14 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
                 if (!isGPSIsEnabled(getActivity())) {
                     // notify user
                     new AlertDialog.Builder(getActivity())
-                            .setMessage("Sorry GPS is not enabled")
-                            .setPositiveButton("Open", new DialogInterface.OnClickListener() {
+                            .setMessage(R.string.gps_is_not_enabled)
+                            .setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                                     getActivity().startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                                 }
                             })
-                            .setNegativeButton("Cancel", null)
+                            .setNegativeButton(R.string.cancel, null)
                             .show();
 
                     goToStartGPS = true;

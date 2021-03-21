@@ -210,4 +210,37 @@ public class Utils {
         }
     }
 
+    public static String [] getPrayerTimes (Context context){
+        PrayTime prayers = new PrayTime();
+
+        prayers.setTimeFormat(prayers.Time24);
+        prayers.setCalcMethod(AppSettingHelper.getAzanCalculationMethod(context, prayers.Egypt));
+        prayers.setAsrJuristic(AppSettingHelper.getAzanJuristicMethod(context,prayers.Shafii));
+        prayers.setAdjustHighLats(prayers.AngleBased);
+        int[] offsets = {0, 0, 0, 0, 0, 0, 0}; // {Fajr,Sunrise,Dhuhr,Asr,Sunset,Maghrib,Isha}
+        prayers.tune(offsets);
+
+        double latitude = Double.parseDouble(AppSettingHelper.getLatitude(context));
+        double longitude = Double.parseDouble(AppSettingHelper.getLongitude(context));;
+        double timezone = Double.parseDouble(AppSettingHelper.getTimeZone(context));;
+
+        // Test Prayer times here
+
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+
+        ArrayList<String> prayerTimes = prayers.getPrayerTimes(cal,
+                latitude, longitude, timezone);
+
+        String[] times = new String[prayerTimes.size()];
+
+        for (int i=0; i < prayerTimes.size(); i++){
+            times[i] = prayerTimes.get(i);
+        }
+
+        return times;
+
+    }
+
 }

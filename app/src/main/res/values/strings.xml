@@ -28,17 +28,19 @@
     <string name="allow">Allow</string>
     <string name="edit">Edit</string>
     <string name="close">Close</string>
-
-
+    <string name="open">Open</string>
+    <string name="cancel">Cancel</string>
 
     <string name="you_must_permit_drawing_over_other_apps">You must permit drawing over other apps</string>
     <string name="your_current_location_is">Your Current Location is</string>
-    <string name="cairo">Cairo</string>
     <string name="your_selected_azan_times_calculation_type_is">Your selected Azan times calculation type is :</string>
     <string name="till_next_prayer">Till next prayer</string>
+    <string name="gps_is_not_enabled">Sorry GPS is not enabled</string>
+
     <string name="space_"> </string>
     <string name="colon_with_space"> : </string>
 
+    <string name="cairo">Cairo</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="timezone">Timezone</string>
