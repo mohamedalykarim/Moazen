@@ -47,6 +47,9 @@ public class AzanBroadcastReceiver extends BroadcastReceiver {
 
         String action = intent.getAction();
 
+        Log.d(TAG, "onReceive: action "+ action);
+        Log.d(TAG, "onReceive: azanType "+ azanType);
+
         switch (action) {
             case Constants.AZAN_RECEIVER_ORDER_INIT_AZAN: {
                 Log.d(TAG, "onReceive: AZAN_RECEIVER_ORDER_INIT_AZAN");

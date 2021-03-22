@@ -5,17 +5,24 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import mohalim.islamic.moazen.core.AzanBroadcastReceiver;
 import mohalim.islamic.moazen.core.utils.Constants;
@@ -42,13 +49,6 @@ public class AzanTimesWorker extends Worker {
                 return Result.failure();
             }
         }
-
-        PowerManager.WakeLock screenLock = ((PowerManager)getApplicationContext().getSystemService(POWER_SERVICE))
-                .newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "moazen:TAG" );
-        screenLock.acquire(2 * 60 * 1000);
-
-        screenLock.release();
-
 
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 
@@ -77,8 +77,8 @@ public class AzanTimesWorker extends Worker {
         setAzan(alarmManager, prayerTimes[5], Constants.AZAN_MAGHREB);
         setAzan(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA);
 
-//        setAzan(alarmManager,"12:49", Constants.AZAN_ESHAA);
-//        setReminder(alarmManager,"19:07", Constants.AZAN_FUGR);
+//        setAzan(alarmManager,"22:33", Constants.AZAN_ESHAA);
+//        setReminder(alarmManager,"22:33", Constants.AZAN_ESHAA);
 
 
 
@@ -87,18 +87,20 @@ public class AzanTimesWorker extends Worker {
     }
 
     private void cancelReminder(AlarmManager alarmManager, int azanType) {
-        Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
-        alarmManager.cancel(alarmIntent);
-        Log.d(TAG, "cancelReminder: "+ Utils.getNextAzantTypeName(getApplicationContext(), azanType));
+//        Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
+//        PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
+//        alarmManager.cancel(alarmIntent);
+//        Log.d(TAG, "cancelReminder: "+ Utils.getNextAzantTypeName(getApplicationContext(), azanType));
+
+        WorkManager.getInstance(getApplicationContext()).cancelUniqueWork(Utils.getReminderName(getApplicationContext(), azanType));
     }
 
     private void cancelAzan(AlarmManager alarmManager, int azanType) {
-        Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
-        alarmManager.cancel(alarmIntent);
-        Log.d(TAG, "cancelAzan: "+ Utils.getAzantTypeName(getApplicationContext(), azanType));
-
+//        Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
+//        PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
+//        alarmManager.cancel(alarmIntent);
+//        Log.d(TAG, "cancelAzan: "+ Utils.getAzantTypeName(getApplicationContext(), azanType));
+        WorkManager.getInstance(getApplicationContext()).cancelUniqueWork(Utils.getAzantTypeName(getApplicationContext(), azanType));
     }
 
     private void setReminder(AlarmManager alarmManager, String time, int azanType) {
@@ -114,21 +116,45 @@ public class AzanTimesWorker extends Worker {
         nowCalendar.setTime(new Date());
 
         if (calendar.getTimeInMillis() > nowCalendar.getTimeInMillis()){
-            Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
-            intent.setAction(Constants.AZAN_RECEIVER_ORDER_INIT_REMINDER);
-            intent.putExtra(Constants.AZAN_TYPE, azanType);
+//            Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
+//            intent.setAction(Constants.AZAN_RECEIVER_ORDER_INIT_REMINDER);
+//            intent.putExtra(Constants.AZAN_TYPE, azanType);
 
-            PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
-            if (Build.VERSION.SDK_INT >= 23) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-            } else if (Build.VERSION.SDK_INT >= 19) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-            } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-            }
+//            PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
+//            if (Build.VERSION.SDK_INT >= 23) {
+//                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+//            } else if (Build.VERSION.SDK_INT >= 19) {
+//                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+//            } else {
+//                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+//            }
+
+
+
+
+            long delay = calendar.getTimeInMillis() - nowCalendar.getTimeInMillis();
+            Log.d(TAG, "setReminder: delay : "+ (delay/1000));
+
+            Data data = new Data.Builder()
+                    .putString(Constants.ACTION, Constants.AZAN_RECEIVER_ORDER_INIT_REMINDER)
+                    .putInt(Constants.AZAN_TYPE, azanType)
+                    .putString(Constants.TIME, time)
+                    .build();
+
+            OneTimeWorkRequest myworker = new OneTimeWorkRequest.Builder(SoloScheduleWorker.class)
+                    .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                    .setInputData(data)
+                    .build();
+
+            WorkManager.getInstance(getApplicationContext())
+                    .enqueueUniqueWork(
+                            Utils.getAzantTypeName(getApplicationContext(), azanType),
+                            ExistingWorkPolicy.REPLACE,
+                            myworker);
+
+
         }
 
-        Log.d(TAG, "setReminder: "+ Utils.getAzantTypeName(getApplicationContext(), azanType));
 
     }
 
@@ -144,18 +170,39 @@ public class AzanTimesWorker extends Worker {
 
         if (calendar.getTimeInMillis() > nowCalendar.getTimeInMillis()){
 
-            Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
-            intent.setAction(Constants.AZAN_RECEIVER_ORDER_INIT_AZAN);
-            intent.putExtra(Constants.AZAN_TYPE, azanType);
+//            Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
+//            intent.setAction(Constants.AZAN_RECEIVER_ORDER_INIT_AZAN);
+//            intent.putExtra(Constants.AZAN_TYPE, azanType);
 
-            PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
-            if (Build.VERSION.SDK_INT >= 23) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-            }else if (Build.VERSION.SDK_INT >= 19) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-            } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-            }
+//            PendingIntent alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), azanType, intent, 0);
+//            if (Build.VERSION.SDK_INT >= 23) {
+//                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+//            }else if (Build.VERSION.SDK_INT >= 19) {
+//                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+//            } else {
+//                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+//            }
+
+            long delay = calendar.getTimeInMillis() - nowCalendar.getTimeInMillis();
+            Log.d(TAG, "setAZan: delay : "+ (delay/1000));
+
+            Data data = new Data.Builder()
+                    .putString(Constants.ACTION, Constants.AZAN_RECEIVER_ORDER_INIT_AZAN)
+                    .putInt(Constants.AZAN_TYPE, azanType)
+                    .putString(Constants.TIME, time)
+                    .build();
+
+            OneTimeWorkRequest myworker = new OneTimeWorkRequest.Builder(SoloScheduleWorker.class)
+                    .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                    .setInputData(data)
+                    .build();
+
+            WorkManager.getInstance(getApplicationContext())
+                    .enqueueUniqueWork(
+                            Utils.getReminderName(getApplicationContext(), azanType),
+                            ExistingWorkPolicy.REPLACE,
+                            myworker);
+
         }
 
 

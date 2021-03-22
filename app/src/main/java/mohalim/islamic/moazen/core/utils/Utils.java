@@ -40,6 +40,20 @@ public class Utils {
         }else return "";
     }
 
+    public static String getReminderName(Context context, int azanType){
+        if (azanType == Constants.AZAN_FUGR){
+            return context.getResources().getString(R.string.azan_fagr)+"_Reminder";
+        }else if (azanType == Constants.AZAN_ZUHR){
+            return context.getResources().getString(R.string.azan_zuhr)+"_Reminder";
+        }else if (azanType == Constants.AZAN_ASR){
+            return context.getResources().getString(R.string.azan_asr)+"_Reminder";
+        }else if (azanType == Constants.AZAN_MAGHREB){
+            return context.getResources().getString(R.string.azan_maghreb)+"_Reminder";
+        }else if (azanType == Constants.AZAN_ESHAA){
+            return context.getResources().getString(R.string.azan_eshaa)+"_Reminder";
+        }else return "";
+    }
+
     public static String getNextAzantTypeName(Context context, int azanType){
         if (azanType == Constants.AZAN_FUGR){
             return context.getResources().getString(R.string.azan_zuhr);

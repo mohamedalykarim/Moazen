@@ -1,5 +1,6 @@
 package mohalim.islamic.moazen.core.service;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -76,8 +77,7 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     private WindowManager mWindowManager;
     private WorkManager manager;
 
-    NotificationManager notificationManager =
-            (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationManager notificationManager;
 
 
     PhoneStateListener phoneStateListener = new PhoneStateListener() {
@@ -99,6 +99,7 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
 
 
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         if (intent == null) return Service.START_NOT_STICKY;
         if (intent.getAction() == null) return Service.START_NOT_STICKY;
 
@@ -109,15 +110,26 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
         if (action.equals(Constants.PLAYER_REMINDER)){
             int azanType = intent.getIntExtra(Constants.AZAN_TYPE,1);
             changeMedia(R.raw.reminder);
-            mediaPlayer.start();
-            initReminderNotification(this, azanType);
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mediaPlayer.start();
+                    initReminderNotification(getApplicationContext(), azanType);
+
+                }
+            });
 
         } else if (action.equals(Constants.PLAYER_AZAN)){
             int azanType = intent.getIntExtra(Constants.AZAN_TYPE,1);
             changeMedia(R.raw.quds);
-            mediaPlayer.start();
 
-            initNotification(this, azanType);
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mediaPlayer.start();
+                    initNotification(getApplicationContext(), azanType);
+                }
+            });
 
 
             if(Build.VERSION.SDK_INT >= 23) {
@@ -301,6 +313,9 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
     @Override
     public void onCreate() {
         super.onCreate();
+        notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
     }
 
     private boolean isViewCollapsed() {
@@ -449,9 +464,21 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
                             snoozePendingIntent);
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = Constants.NOTIFICATION_CHANNEL_ID;
+            String description = Constants.NOTIFICATION_CHANNEL_ID;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
 
-        startForeground(Constants.NOTIFICATION_ID, builder.build());
+            // Don't see these lines in your code...
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            startForeground(Constants.NOTIFICATION_ID, builder.build());
 
+        }else{
+            startForeground(Constants.NOTIFICATION_ID, builder.build());
+        }
     }
 
     public void initReminderNotification(Context context, int azanType){
@@ -483,12 +510,24 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
                             snoozePendingIntent);
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = Constants.NOTIFICATION_CHANNEL_ID;
+            String description = Constants.NOTIFICATION_CHANNEL_ID;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
 
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            // Don't see these lines in your code...
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            startForeground(Constants.NOTIFICATION_ID, builder.build());
+
+        }else{
+            startForeground(Constants.NOTIFICATION_ID, builder.build());
+        }
 
 
-        startForeground(Constants.NOTIFICATION_ID, builder.build());
+
 
     }
 
@@ -496,7 +535,7 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
         Data data = new Data.Builder().putStringArray("prayerTimes",prayTimes).build();
         PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
                 AzanTimesWorker.class,
-                90,
+                60,
                 TimeUnit.MINUTES
         ).setInputData(data).build();
 
