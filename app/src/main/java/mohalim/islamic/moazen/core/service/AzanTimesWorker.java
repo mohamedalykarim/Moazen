@@ -77,7 +77,7 @@ public class AzanTimesWorker extends Worker {
         setAzan(alarmManager, prayerTimes[5], Constants.AZAN_MAGHREB);
         setAzan(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA);
 
-//        setAzan(alarmManager,"22:33", Constants.AZAN_ESHAA);
+//        setAzan(alarmManager,"19:30", Constants.AZAN_ESHAA);
 //        setReminder(alarmManager,"22:33", Constants.AZAN_ESHAA);
 
 
