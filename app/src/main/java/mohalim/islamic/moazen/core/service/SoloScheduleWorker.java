@@ -41,7 +41,7 @@ public class SoloScheduleWorker extends Worker {
         Calendar nowCalendar = Calendar.getInstance();
         nowCalendar.setTime(new Date());
 
-        if (calendar.getTimeInMillis() < nowCalendar.getTimeInMillis()) return Result.failure();
+        if (calendar.getTimeInMillis() + 2000 < nowCalendar.getTimeInMillis()) return Result.failure();
 
         Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
         intent.setAction(action);

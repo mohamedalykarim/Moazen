@@ -9,16 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
-import androidx.work.ListenableWorker;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import javax.inject.Provider;
 
 import mohalim.islamic.moazen.R;
 
@@ -69,9 +63,9 @@ public class Utils {
     }
 
     public static String []  getAzanTimes(Context context, long timeMillisecond, PrayTime prayers){
-        double latitude = Double.parseDouble(AppSettingHelper.getLatitude(context));
-        double longitude = Double.parseDouble(AppSettingHelper.getLongitude(context));;
-        double timezone = Double.parseDouble(AppSettingHelper.getTimeZone(context));;
+        double latitude = Double.parseDouble(AppPrefsHelper.getLatitude(context));
+        double longitude = Double.parseDouble(AppPrefsHelper.getLongitude(context));;
+        double timezone = Double.parseDouble(AppPrefsHelper.getTimeZone(context));;
 
         // Test Prayer times here
 
@@ -228,15 +222,15 @@ public class Utils {
         PrayTime prayers = new PrayTime();
 
         prayers.setTimeFormat(prayers.Time24);
-        prayers.setCalcMethod(AppSettingHelper.getAzanCalculationMethod(context, prayers.Egypt));
-        prayers.setAsrJuristic(AppSettingHelper.getAzanJuristicMethod(context,prayers.Shafii));
+        prayers.setCalcMethod(AppPrefsHelper.getAzanCalculationMethod(context, prayers.Egypt));
+        prayers.setAsrJuristic(AppPrefsHelper.getAzanJuristicMethod(context,prayers.Shafii));
         prayers.setAdjustHighLats(prayers.AngleBased);
         int[] offsets = {0, 0, 0, 0, 0, 0, 0}; // {Fajr,Sunrise,Dhuhr,Asr,Sunset,Maghrib,Isha}
         prayers.tune(offsets);
 
-        double latitude = Double.parseDouble(AppSettingHelper.getLatitude(context));
-        double longitude = Double.parseDouble(AppSettingHelper.getLongitude(context));;
-        double timezone = Double.parseDouble(AppSettingHelper.getTimeZone(context));;
+        double latitude = Double.parseDouble(AppPrefsHelper.getLatitude(context));
+        double longitude = Double.parseDouble(AppPrefsHelper.getLongitude(context));;
+        double timezone = Double.parseDouble(AppPrefsHelper.getTimeZone(context));;
 
         // Test Prayer times here
 

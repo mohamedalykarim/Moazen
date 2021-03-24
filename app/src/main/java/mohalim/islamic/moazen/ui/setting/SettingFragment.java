@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -50,7 +49,7 @@ import dagger.android.support.DaggerFragment;
 import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppExecutor;
-import mohalim.islamic.moazen.core.utils.AppSettingHelper;
+import mohalim.islamic.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.moazen.core.utils.Constants;
 import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.core.viewmodel.ViewModelProviderFactory;
@@ -156,11 +155,11 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
         };
 
 
-        binding.cityTv.setText(AppSettingHelper.getLocationName(getActivity()));
+        binding.cityTv.setText(AppPrefsHelper.getLocationName(getActivity()));
 
 
 
-        int calMethod = AppSettingHelper.getAzanCalculationMethod(getActivity(), prayTime.Karachi);
+        int calMethod = AppPrefsHelper.getAzanCalculationMethod(getActivity(), prayTime.Karachi);
         String calMethodName = "";
         if (calMethod == prayTime.Karachi) {
             calMethodName = getResources().getString(R.string.university_of_islamic_sciences_karachi);
@@ -178,13 +177,13 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
 
         binding.calculationTypeTv.setText(calMethodName);
         binding.latAndLongAndTimezone.setText(
-                getString(R.string.latitude)+" : " + String.format("%.2f", Double.valueOf(AppSettingHelper.getLatitude(getActivity()))) + "\n"
-                        + getString(R.string.longitude)+" : " + String.format("%.2f", Double.valueOf(AppSettingHelper.getLongitude(getActivity()))) + "\n"
-                        + getString(R.string.timezone)+" : " + AppSettingHelper.getTimeZone(getActivity())
+                getString(R.string.latitude)+" : " + String.format("%.2f", Double.valueOf(AppPrefsHelper.getLatitude(getActivity()))) + "\n"
+                        + getString(R.string.longitude)+" : " + String.format("%.2f", Double.valueOf(AppPrefsHelper.getLongitude(getActivity()))) + "\n"
+                        + getString(R.string.timezone)+" : " + AppPrefsHelper.getTimeZone(getActivity())
         );
 
 
-        int juristicMethod = AppSettingHelper.getAzanJuristicMethod(getActivity(), prayTime.Shafii);
+        int juristicMethod = AppPrefsHelper.getAzanJuristicMethod(getActivity(), prayTime.Shafii);
         if (juristicMethod == prayTime.Shafii ){
             binding.juristicMethodTv.setText(getResources().getString(R.string.shafii));
         }else if (juristicMethod == prayTime.Hanafi ){
@@ -239,10 +238,10 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
         );
 
 
-        AppSettingHelper.setLocationName(getActivity(), addresses.get(0).getAddressLine(0));
-        AppSettingHelper.setLatitude(getActivity(),String.valueOf(location.getLatitude()));
-        AppSettingHelper.setLongitude(getActivity(),String.valueOf(location.getLongitude()));
-        AppSettingHelper.setTimeZone(getActivity(),String.valueOf(tz.getRawOffset()/1000/60/60));
+        AppPrefsHelper.setLocationName(getActivity(), addresses.get(0).getAddressLine(0));
+        AppPrefsHelper.setLatitude(getActivity(),String.valueOf(location.getLatitude()));
+        AppPrefsHelper.setLongitude(getActivity(),String.valueOf(location.getLongitude()));
+        AppPrefsHelper.setTimeZone(getActivity(),String.valueOf(tz.getRawOffset()/1000/60/60));
 
         binding.loading.setVisibility(View.GONE);
         fusedLocationClient.removeLocationUpdates(locationCallback);
@@ -354,7 +353,7 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
     public void updateCalMethod(int type, int typeName) {
         binding.calTypeEditBtn.setVisibility(View.VISIBLE);
         binding.calTypeBtnsContainer.setVisibility(View.GONE);
-        AppSettingHelper.setAzanCalculationMethod(getContext(), type);
+        AppPrefsHelper.setAzanCalculationMethod(getContext(), type);
         binding.calculationTypeTv.setText(getResources().getString(typeName));
         startManager();
     }
@@ -362,7 +361,7 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
     public void updateJuristicMethod(int type, int typeName) {
         binding.juristicMethodEdit.setVisibility(View.VISIBLE);
         binding.juristicMethodBtnsContainer.setVisibility(View.GONE);
-        AppSettingHelper.setAzanJuristicMethod(getContext(), type);
+        AppPrefsHelper.setAzanJuristicMethod(getContext(), type);
         binding.juristicMethodTv.setText(getResources().getString(typeName));
         startManager();
     }

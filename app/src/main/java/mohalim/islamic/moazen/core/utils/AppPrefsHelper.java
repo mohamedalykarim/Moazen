@@ -3,7 +3,7 @@ package mohalim.islamic.moazen.core.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class AppSettingHelper {
+public class AppPrefsHelper {
 
     private static final String APP_SETTINGS =  "mohalim.islamic.moazen.APP_SETTING";
 
@@ -129,6 +129,24 @@ public class AppSettingHelper {
     public static void setAzanJuristicMethod(Context context, int newValue) {
         final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putInt(AZAN_JURISTIC_METHOD , newValue);
+        editor.commit();
+    }
+
+
+    /**
+     * REMINDER_BEFORE_TIME
+     */
+
+    private static final String REMINDER_BEFORE_TIME =  "reminder_before_time";
+
+    public static int getReminderTime(Context context, int defaultValue) {
+        return getSharedPreferences(context).getInt(REMINDER_BEFORE_TIME, defaultValue);
+    }
+
+
+    public static void setReminderTime(Context context, int newValue) {
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putInt(REMINDER_BEFORE_TIME , newValue);
         editor.commit();
     }
 

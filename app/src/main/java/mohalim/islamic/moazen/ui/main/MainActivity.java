@@ -3,7 +3,6 @@ package mohalim.islamic.moazen.ui.main;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
@@ -11,12 +10,10 @@ import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,7 +27,7 @@ import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.di.base.BaseActivity;
 import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppDateUtil;
-import mohalim.islamic.moazen.core.utils.AppSettingHelper;
+import mohalim.islamic.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.moazen.core.utils.Constants;
 import mohalim.islamic.moazen.core.utils.Utils;
 import mohalim.islamic.moazen.core.viewmodel.ViewModelProviderFactory;
@@ -351,9 +348,9 @@ public class MainActivity extends BaseActivity {
 
 
     void firstTimeAppOpened(){
-        if (!AppSettingHelper.getIsFirstTimeAppOpened(this)) return;
+        if (!AppPrefsHelper.getIsFirstTimeAppOpened(this)) return;
 
-        AppSettingHelper.setIsFirstTimeAppOpened(this, false);
+        AppPrefsHelper.setIsFirstTimeAppOpened(this, false);
     }
 
 

@@ -7,21 +7,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import mohalim.islamic.moazen.core.database.AzanTimesDao;
-import mohalim.islamic.moazen.core.database.AzanTimesDatabase;
-import mohalim.islamic.moazen.core.model.AzanTimesItem;
-import mohalim.islamic.moazen.core.utils.AppExecutor;
-import mohalim.islamic.moazen.core.utils.AppSettingHelper;
+import mohalim.islamic.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.databinding.AzanTimesFragmentBinding;
 
@@ -38,9 +31,9 @@ public class AzanTimesFragmet extends DaggerFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         AzanTimesFragmentBinding binding = AzanTimesFragmentBinding.inflate(inflater, container, false);
 
-        double latitude = Double.parseDouble(AppSettingHelper.getLatitude(getActivity()));
-        double longitude = Double.parseDouble(AppSettingHelper.getLongitude(getActivity()));;
-        double timezone = Double.parseDouble(AppSettingHelper.getTimeZone(getActivity()));;
+        double latitude = Double.parseDouble(AppPrefsHelper.getLatitude(getActivity()));
+        double longitude = Double.parseDouble(AppPrefsHelper.getLongitude(getActivity()));;
+        double timezone = Double.parseDouble(AppPrefsHelper.getTimeZone(getActivity()));;
 
         // Test Prayer times here
 

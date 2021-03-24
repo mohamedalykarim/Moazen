@@ -1,22 +1,19 @@
 package mohalim.islamic.moazen.core.di.module;
 
 import android.app.Application;
-import android.content.ContextWrapper;
 import android.media.MediaPlayer;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.inject.Named;
-import javax.inject.Qualifier;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.utils.AppExecutor;
-import mohalim.islamic.moazen.core.utils.AppSettingHelper;
+import mohalim.islamic.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.moazen.core.utils.PrayTime;
 
 @Module
@@ -33,8 +30,8 @@ public class AppModule {
         PrayTime prayers = new PrayTime();
 
         prayers.setTimeFormat(prayers.Time24);
-        prayers.setCalcMethod(AppSettingHelper.getAzanCalculationMethod(application, prayers.Egypt));
-        prayers.setAsrJuristic(AppSettingHelper.getAzanJuristicMethod(application,prayers.Shafii));
+        prayers.setCalcMethod(AppPrefsHelper.getAzanCalculationMethod(application, prayers.Egypt));
+        prayers.setAsrJuristic(AppPrefsHelper.getAzanJuristicMethod(application,prayers.Shafii));
         prayers.setAdjustHighLats(prayers.AngleBased);
         int[] offsets = {0, 0, 0, 0, 0, 0, 0}; // {Fajr,Sunrise,Dhuhr,Asr,Sunset,Maghrib,Isha}
         prayers.tune(offsets);
@@ -45,9 +42,9 @@ public class AppModule {
 
     @Provides
     static String[] providePrayTimes(PrayTime prayers, Application application){
-        double latitude = Double.parseDouble(AppSettingHelper.getLatitude(application));
-        double longitude = Double.parseDouble(AppSettingHelper.getLongitude(application));;
-        double timezone = Double.parseDouble(AppSettingHelper.getTimeZone(application));;
+        double latitude = Double.parseDouble(AppPrefsHelper.getLatitude(application));
+        double longitude = Double.parseDouble(AppPrefsHelper.getLongitude(application));;
+        double timezone = Double.parseDouble(AppPrefsHelper.getTimeZone(application));;
 
         // Test Prayer times here
 
