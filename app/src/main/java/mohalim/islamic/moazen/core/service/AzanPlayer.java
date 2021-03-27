@@ -17,23 +17,19 @@ import android.provider.Settings;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 
 import androidx.core.app.NotificationCompat;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.ListenableWorker;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -47,6 +43,7 @@ import javax.inject.Inject;
 import dagger.android.DaggerService;
 import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.AzanBroadcastReceiver;
+import mohalim.islamic.moazen.core.service.alarm.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.Constants;
 import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.core.utils.Utils;
@@ -139,12 +136,10 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
             }
 
         }else if (action.equals(Constants.AZAN_RECEIVER_ORDER_STOP)){
-            if (mediaPlayer.isPlaying()){
-                mediaPlayer.seekTo(0);
-                mediaPlayer.stop();
-                notificationManager.cancel(Constants.NOTIFICATION_ID);
+            mediaPlayer.seekTo(0);
+            mediaPlayer.stop();
+            notificationManager.cancel(Constants.NOTIFICATION_ID);
 
-            }
         }else if (action.equals(Constants.AZAN_RECEIVER_ORDER_RESUME)){
             if (intent.hasExtra(Constants.PLAYER_POSITION)){
                 mediaPlayer.seekTo(intent.getIntExtra(Constants.PLAYER_POSITION,0));
@@ -517,7 +512,6 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
             NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, name, importance);
             channel.setDescription(description);
 
-            // Don't see these lines in your code...
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
             startForeground(Constants.NOTIFICATION_ID, builder.build());
@@ -540,7 +534,6 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
         ).setInputData(data).build();
 
         manager = WorkManager.getInstance(this);
-
 
         manager.enqueueUniquePeriodicWork(
                 "AzanTimes",

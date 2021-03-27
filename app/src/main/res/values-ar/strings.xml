@@ -47,5 +47,6 @@
     <string name="latitude">خط العرض</string>
     <string name="longitude">خط الطول</string>
     <string name="timezone">الوحدة الزمنية</string>
+    <string name="your_juristic_method">الطريقة الفقهية المختارة</string>
 
 </resources>

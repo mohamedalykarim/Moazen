@@ -93,7 +93,6 @@ public class AzanBroadcastReceiver extends BroadcastReceiver {
             }
 
             case Constants.AZAN_RECEIVER_ORDER_STOP: {
-                Log.d(TAG, "onReceive: AZAN_RECEIVER_ORDER_STOP");
                 Intent azanPlayIntent = new Intent(context, AzanPlayer.class);
                 azanPlayIntent.setAction(Constants.AZAN_RECEIVER_ORDER_STOP);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

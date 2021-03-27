@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.di.base.BaseActivity;
-import mohalim.islamic.moazen.core.service.AzanTimesWorker;
+import mohalim.islamic.moazen.core.service.alarm.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppDateUtil;
 import mohalim.islamic.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.moazen.core.utils.Constants;

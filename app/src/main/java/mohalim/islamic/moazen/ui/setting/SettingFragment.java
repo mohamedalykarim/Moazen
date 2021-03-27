@@ -38,6 +38,10 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -47,10 +51,11 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import mohalim.islamic.moazen.R;
-import mohalim.islamic.moazen.core.service.AzanTimesWorker;
+import mohalim.islamic.moazen.core.service.alarm.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppExecutor;
 import mohalim.islamic.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.moazen.core.utils.Constants;
+import mohalim.islamic.moazen.core.utils.LocationUtils;
 import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.core.viewmodel.ViewModelProviderFactory;
 import mohalim.islamic.moazen.databinding.FragmentSettingBinding;
@@ -225,12 +230,32 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
     private void updateLocation(Location location) {
         if (location == null) return;
 
-        List<Address> addresses = getAddresses(location.getLatitude(), location.getLongitude());
+        appExecutor.diskIO().execute(()->{
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            try {
+                List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                String address = addresses.get(0).getAddressLine(0);
+                AppPrefsHelper.setLocationName(getActivity(), address);
+
+                appExecutor.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.cityTv.setText(address);
+                    }
+                });
+
+            } catch (IOException e) {
+                Log.e(TAG, "Error: "+ e.getMessage());
+            }
+
+        });
+
+
 
         TimeZone tz = TimeZone.getDefault();
+        
 
-
-        binding.cityTv.setText(addresses.get(0).getAddressLine(0));
+        
         binding.latAndLongAndTimezone.setText(
                 "Latitude : " + String.format("%.2f", location.getLatitude()) + "\n"
                         + "Longitude : " + String.format("%.2f", location.getLongitude()) + "\n"
@@ -238,7 +263,6 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
         );
 
 
-        AppPrefsHelper.setLocationName(getActivity(), addresses.get(0).getAddressLine(0));
         AppPrefsHelper.setLatitude(getActivity(),String.valueOf(location.getLatitude()));
         AppPrefsHelper.setLongitude(getActivity(),String.valueOf(location.getLongitude()));
         AppPrefsHelper.setTimeZone(getActivity(),String.valueOf(tz.getRawOffset()/1000/60/60));
@@ -247,19 +271,6 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
         fusedLocationClient.removeLocationUpdates(locationCallback);
         startManager();
     }
-
-
-    public List<Address> getAddresses(double myLat, double myLong){
-        try {
-            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(myLat, myLong, 1);
-
-            return addresses;
-        }catch (Exception e){
-            return null;
-        }
-    }
-
 
 
     @Override

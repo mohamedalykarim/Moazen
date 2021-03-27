@@ -44,4 +44,5 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="timezone">Timezone</string>
+    <string name="your_juristic_method">Your Juristic Method</string>
 </resources>
