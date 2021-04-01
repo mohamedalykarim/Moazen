@@ -8,7 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.PowerManager;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -27,10 +31,16 @@ public class UpdateTimesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_times);
 
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
+                PowerManager.PARTIAL_WAKE_LOCK |
+                        PowerManager.ACQUIRE_CAUSES_WAKEUP |
+                        PowerManager.ON_AFTER_RELEASE,
+                "MyApp:Sleeplock");
+        wakeLock.acquire();
+
+
         String [] prayerTimes = getIntent().getStringArrayExtra(Constants.PLAYER_TIMES);
-
-        Log.d(TAG, "UpdateTimesActivity: " );
-
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 
 
@@ -58,14 +68,12 @@ public class UpdateTimesActivity extends BaseActivity {
         setAzan(alarmManager, prayerTimes[5], Constants.AZAN_MAGHREB);
         setAzan(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA);
 
-        setAzan(alarmManager,"20:57", Constants.AZAN_ESHAA);
-        setReminder(alarmManager,"20:57", Constants.AZAN_ESHAA);
+//        setAzan(alarmManager,"01:40", Constants.AZAN_ESHAA);
+//        setReminder(alarmManager,"01:40", Constants.AZAN_ESHAA);
 
-
+        wakeLock.release();
         finish();
-
     }
-
 
 
     private void cancelReminder(AlarmManager alarmManager, int azanType) {
