@@ -43,7 +43,6 @@ import javax.inject.Inject;
 import dagger.android.DaggerService;
 import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.AzanBroadcastReceiver;
-import mohalim.islamic.moazen.core.service.alarm.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.Constants;
 import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.core.utils.Utils;

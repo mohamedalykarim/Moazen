@@ -1,54 +1,35 @@
-package mohalim.islamic.moazen.core.service.alarm;
+package mohalim.islamic.moazen.ui.update_times;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.provider.Settings;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.WindowManager;
-
-import androidx.annotation.NonNull;
-import androidx.work.Data;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
+import mohalim.islamic.moazen.R;
 import mohalim.islamic.moazen.core.AzanBroadcastReceiver;
+import mohalim.islamic.moazen.core.di.base.BaseActivity;
 import mohalim.islamic.moazen.core.utils.Constants;
 import mohalim.islamic.moazen.core.utils.Utils;
 
-import static android.content.Context.POWER_SERVICE;
+public class UpdateTimesActivity extends BaseActivity {
+    private static final String TAG = "UpdateTimesActivity";
 
-public class AzanTimesWorker extends Worker {
-    private final String TAG = "AzanTimesWorker";
-
-    String[] prayerTimes;
-
-
-    public AzanTimesWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
-        super(context, workerParams);
-        prayerTimes = workerParams.getInputData().getStringArray("prayerTimes");
-    }
-
-    @NonNull
     @Override
-    public Result doWork() {
-        if(Build.VERSION.SDK_INT >= 23) {
-            if (!Settings.canDrawOverlays(getApplicationContext())) {
-                return Result.failure();
-            }
-        }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_update_times);
+
+        String [] prayerTimes = getIntent().getStringArrayExtra(Constants.PLAYER_TIMES);
+
+        Log.d(TAG, "UpdateTimesActivity: " );
 
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 
@@ -77,14 +58,15 @@ public class AzanTimesWorker extends Worker {
         setAzan(alarmManager, prayerTimes[5], Constants.AZAN_MAGHREB);
         setAzan(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA);
 
-//        setAzan(alarmManager,"22:10", Constants.AZAN_ESHAA);
-//        setReminder(alarmManager,"22:10", Constants.AZAN_ESHAA);
+        setAzan(alarmManager,"20:57", Constants.AZAN_ESHAA);
+        setReminder(alarmManager,"20:57", Constants.AZAN_ESHAA);
 
 
+        finish();
 
-
-        return Result.success();
     }
+
+
 
     private void cancelReminder(AlarmManager alarmManager, int azanType) {
         Intent intent = new Intent(getApplicationContext(), AzanBroadcastReceiver.class);
@@ -159,6 +141,4 @@ public class AzanTimesWorker extends Worker {
         }
         Log.d(TAG, "setAzan: "+ Utils.getAzantTypeName(getApplicationContext(), azanType));
     }
-
-
 }

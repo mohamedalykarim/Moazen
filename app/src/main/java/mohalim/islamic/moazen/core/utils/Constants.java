@@ -30,4 +30,5 @@ public class Constants {
     public static final String ACTION = "action";
     public static final String TIME = "time";
 
+    public static final String PLAYER_TIMES = "prayer_times";
 }

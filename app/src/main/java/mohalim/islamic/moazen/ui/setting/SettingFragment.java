@@ -38,9 +38,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -51,11 +48,10 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import mohalim.islamic.moazen.R;
-import mohalim.islamic.moazen.core.service.alarm.AzanTimesWorker;
+import mohalim.islamic.moazen.core.service.AzanTimesWorker;
 import mohalim.islamic.moazen.core.utils.AppExecutor;
 import mohalim.islamic.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.moazen.core.utils.Constants;
-import mohalim.islamic.moazen.core.utils.LocationUtils;
 import mohalim.islamic.moazen.core.utils.PrayTime;
 import mohalim.islamic.moazen.core.viewmodel.ViewModelProviderFactory;
 import mohalim.islamic.moazen.databinding.FragmentSettingBinding;

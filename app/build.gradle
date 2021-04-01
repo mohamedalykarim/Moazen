@@ -19,6 +19,7 @@ android {
         versionCode 2
         versionName "1.02"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -73,6 +74,7 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-location:18.0.0'
 
+    implementation 'com.android.support:multidex:1.0.3'
 
 }
 
