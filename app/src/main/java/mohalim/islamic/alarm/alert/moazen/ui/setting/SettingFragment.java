@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -53,6 +54,7 @@ import mohalim.islamic.alarm.alert.moazen.core.utils.AppExecutor;
 import mohalim.islamic.alarm.alert.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.alarm.alert.moazen.core.utils.Constants;
 import mohalim.islamic.alarm.alert.moazen.core.utils.PrayTime;
+import mohalim.islamic.alarm.alert.moazen.core.utils.Utils;
 import mohalim.islamic.alarm.alert.moazen.core.viewmodel.ViewModelProviderFactory;
 import mohalim.islamic.alarm.alert.moazen.databinding.FragmentSettingBinding;
 
@@ -191,6 +193,30 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
             binding.juristicMethodTv.setText(getResources().getString(R.string.hanafi));
         }
 
+        int timeBeforeAzan = AppPrefsHelper.getReminderTime(getContext(), 10);
+        if (timeBeforeAzan == 5){
+            binding.spinner.setSelection(0);
+        }else if (timeBeforeAzan == 10){
+            binding.spinner.setSelection(1);
+        }else if (timeBeforeAzan == 15){
+            binding.spinner.setSelection(2);
+        }
+
+        binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0){
+                    AppPrefsHelper.setReminderTime(getContext(), 5);
+                }else if (position == 1){
+                    AppPrefsHelper.setReminderTime(getContext(), 10);
+                }else if (position == 2){
+                    AppPrefsHelper.setReminderTime(getContext(), 15);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
 
         return binding.getRoot();
     }
@@ -242,6 +268,7 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
 
             } catch (IOException e) {
                 Log.e(TAG, "Error: "+ e.getMessage());
+                binding.cityTv.setText(R.string.current_location);
             }
 
         });
@@ -374,6 +401,8 @@ public class SettingFragment extends DaggerFragment implements View.OnClickListe
     }
 
     public void startManager() {
+        prayTimes = Utils.getPrayerTimes(getContext());
+
         Data data = new Data.Builder().putStringArray("prayerTimes",prayTimes).build();
         PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
                 AzanTimesWorker.class,

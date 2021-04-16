@@ -45,4 +45,12 @@
     <string name="longitude">Longitude</string>
     <string name="timezone">Timezone</string>
     <string name="your_juristic_method">Your Juristic Method</string>
+    <string name="current_location">Current location</string>
+
+    <string-array name="reminder_before_times">
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+    </string-array>
+
 </resources>

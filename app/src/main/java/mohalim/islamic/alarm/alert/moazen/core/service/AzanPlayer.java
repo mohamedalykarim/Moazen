@@ -44,6 +44,7 @@ import javax.inject.Inject;
 import dagger.android.DaggerService;
 import mohalim.islamic.alarm.alert.moazen.R;
 import mohalim.islamic.alarm.alert.moazen.core.AzanBroadcastReceiver;
+import mohalim.islamic.alarm.alert.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.alarm.alert.moazen.core.utils.Constants;
 import mohalim.islamic.alarm.alert.moazen.core.utils.PrayTime;
 import mohalim.islamic.alarm.alert.moazen.core.utils.Utils;
@@ -517,19 +518,21 @@ public class AzanPlayer extends DaggerService implements MediaPlayer.OnCompletio
 
         Locale currentLocale = context.getResources().getConfiguration().locale;
 
+        int timeBefore = AppPrefsHelper.getReminderTime(getApplicationContext(), 10);
+
         if (currentLocale.getLanguage().equals("en")){
             builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_masjed_icon)
-                    .setContentTitle("5 Minutes till "+ Utils.getAzantTypeName(context, azanType) + " azan")
-                    .setContentText("5 Minutes till " + Utils.getAzantTypeName(context, azanType) + " azan")
+                    .setContentTitle(timeBefore + " Minutes till "+ Utils.getAzantTypeName(context, azanType) + " azan")
+                    .setContentText(timeBefore +" Minutes till " + Utils.getAzantTypeName(context, azanType) + " azan")
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .addAction(R.drawable.ic_stop_play,"Stop",
                             snoozePendingIntent);
         }else if (currentLocale.getLanguage().equals("ar")){
             builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_masjed_icon)
-                    .setContentTitle("باقي 5 دقائق علي اذان  "+ Utils.getAzantTypeName(context, azanType))
-                    .setContentText("باقي 5 دقائق علي اذان  "+ Utils.getAzantTypeName(context, azanType))
+                    .setContentTitle("باقي "+timeBefore+" دقائق علي اذان  "+ Utils.getAzantTypeName(context, azanType))
+                    .setContentText("باقي "+timeBefore+" دقائق علي اذان  "+ Utils.getAzantTypeName(context, azanType))
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .addAction(R.drawable.ic_stop_play,"Stop",
                             snoozePendingIntent);

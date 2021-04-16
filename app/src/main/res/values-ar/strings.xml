@@ -49,4 +49,12 @@
     <string name="timezone">الوحدة الزمنية</string>
     <string name="your_juristic_method">الطريقة الفقهية المختارة</string>
 
+    <string name="current_location">الموقع الحالي</string>
+
+    <string-array name="reminder_before_times">
+        <item>5 دقائق</item>
+        <item>10 دقائق</item>
+        <item>15 دقيقة</item>
+    </string-array>
+
 </resources>

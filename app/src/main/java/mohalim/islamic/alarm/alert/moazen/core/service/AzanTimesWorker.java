@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import mohalim.islamic.alarm.alert.moazen.core.AzanBroadcastReceiver;
+import mohalim.islamic.alarm.alert.moazen.core.utils.AppPrefsHelper;
 import mohalim.islamic.alarm.alert.moazen.core.utils.Constants;
 import mohalim.islamic.alarm.alert.moazen.core.utils.Utils;
 
@@ -41,11 +42,6 @@ public class AzanTimesWorker extends Worker {
                 return Result.failure();
             }
         }
-
-//        Intent intent = new Intent(getApplicationContext(), UpdateTimesActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.putExtra(Constants.PLAYER_TIMES, prayerTimes);
-//        getApplicationContext().startActivity(intent);
 
 
         PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
@@ -83,9 +79,9 @@ public class AzanTimesWorker extends Worker {
         setAzan(alarmManager, prayerTimes[3], Constants.AZAN_ASR);
         setAzan(alarmManager, prayerTimes[5], Constants.AZAN_MAGHREB);
         setAzan(alarmManager, prayerTimes[6], Constants.AZAN_ESHAA);
-
-        setAzan(alarmManager,"18:57", Constants.AZAN_ESHAA);
-        setReminder(alarmManager,"18:57", Constants.AZAN_ESHAA);
+//
+//        setAzan(alarmManager,"18:57", Constants.AZAN_ESHAA);
+//        setReminder(alarmManager,"18:57", Constants.AZAN_ESHAA);
 
         wakeLock.release();
 
@@ -114,7 +110,9 @@ public class AzanTimesWorker extends Worker {
         calendar.set(Calendar.SECOND, Integer.parseInt("00"));
         calendar.set(Calendar.MILLISECOND, Integer.parseInt("0000"));
 
-        calendar.setTimeInMillis(calendar.getTimeInMillis() - 5 * 60 * 1000);
+        int timeBefore = AppPrefsHelper.getReminderTime(getApplicationContext(), 10);
+
+        calendar.setTimeInMillis(calendar.getTimeInMillis() - timeBefore * 60 * 1000);
 
         Calendar nowCalendar = Calendar.getInstance();
         nowCalendar.setTime(new Date());
